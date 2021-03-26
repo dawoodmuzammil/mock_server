@@ -1,0 +1,2958 @@
+openapi: 3.0.3
+info:
+  title: Automotive Credit Requests Application
+  description: >-
+    Prime Automotive Finance e-Origination Public API for Credit Requests
+    provides the capability for channel partners to submit applications to the
+    Automotive Department.  It also allows channel partners to re-submit
+    applications as well as retrieve the status of an application.
+  contact:
+    name: Enterprise API & Events Design Committee
+    url: 'https://confluence.agile.bns/display/APID/'
+    email: enterpriseAPIIntake@scotiabank.com
+  license:
+    name: Scotiabank Automotive
+  version: 1.0.0
+  x-template-version: 3.0.0
+servers:
+  - url: /api/v1
+paths:
+  /application/auto-credits:
+    post:
+      tags:
+        - Automotive Credit Requests
+      summary: >-
+        Provides the capability for channel partners to submit a new credit
+        request application for review and approval.
+      description: >-
+        Provides the capability for channel partners submit a credit application
+        for review and conditional approval.
+      operationId: AddCreditRequest
+      parameters:
+        - $ref: "#/components/parameters/TraceId"
+        - $ref: "#/components/parameters/SpanId"
+        - $ref: "#/components/parameters/ChannelId"
+        - $ref: "#/components/parameters/OriginatingApplicationCode"
+        - $ref: "#/components/parameters/CountryCode"
+        - $ref: "#/components/parameters/ApiVersion"
+        - $ref: "#/components/parameters/UserContext"
+      requestBody:
+        description: The Credit Application information
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreditRequest'
+      responses:
+        '200':
+          description: Returns a Credit Request response object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreditRequestResponse'
+        '400':
+          description: >-
+            Indicates that the server could not understand the request. This is
+            not the same as 422 which indicates a validation error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmptyDataResponse'
+        '401':
+          description: >-
+            Unauthorized.  This will be returned when no authentication
+            information is provided.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmptyDataResponse'
+        '403':
+          description: >-
+            The principal associated with the request does not have sufficient
+            rights to preform this operation on the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmptyDataResponse'
+        '404':
+          description: The requested resource was not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmptyDataResponse'
+        '422':
+          description: >-
+            The request was syntactically correct but was not semantically
+            correct. Usually indicating a validation problem.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmptyDataResponse'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmptyDataResponse'
+      security:
+        - oAuth2ClientCredentials:
+            - application.automotive-credit-requests.bcvc.create-credit-requests.write
+
+  /application/auto-credits/{application-id}:
+    get:
+      tags:
+        - Automotive Credit Requests
+      summary: Retrieves the status of a credit request application.
+      description: >-
+        Retrieves the status of a credit request application identified by its
+        unique ID.  The result is return as a single JSON object
+      operationId: GetCreditApplicationStatus
+      parameters:
+        - name: application-id
+          in: path
+          description: The key for a Credit Application
+          required: true
+          schema:
+            type: string
+        - $ref: "#/components/parameters/TraceId"
+        - $ref: "#/components/parameters/SpanId"
+        - $ref: "#/components/parameters/ChannelId"
+        - $ref: "#/components/parameters/OriginatingApplicationCode"
+        - $ref: "#/components/parameters/CountryCode"
+        - $ref: "#/components/parameters/ApiVersion"
+        - $ref: "#/components/parameters/UserContext"
+      responses:
+        '200':
+          description: Returns a Credit Request Status object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreditRequestStatusResponse'
+        '400':
+          description: >-
+            Indicates that the server could not understand the request. This is
+            not the same as 422 which indicates a validation error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmptyDataResponse'
+        '401':
+          description: >-
+            Unauthorized.  This will be returned when no authentication
+            information is provided.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmptyDataResponse'
+        '403':
+          description: >-
+            The principal associated with the request does not have sufficient
+            rights to preform this operation on the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmptyDataResponse'
+        '404':
+          description: The requested resource was not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmptyDataResponse'
+        '422':
+          description: >-
+            The request was syntactically correct but was not semantically
+            correct. Usually indicating a validation problem.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmptyDataResponse'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmptyDataResponse'
+      security:
+        - oAuth2ClientCredentials:
+            - application.automotive-credit-requests.bcvc.get-credit-requests.read
+
+    put:
+      tags:
+        - Automotive Credit Requests
+      summary: Submits updates to a previously submitted credit request application
+      description: >-
+        Resubmit credit request application to correct information in the
+        original request.
+      operationId: UpdateCreditRequest
+      parameters:
+        - name: application-id
+          in: path
+          required: true
+          schema:
+            type: string
+        - $ref: "#/components/parameters/TraceId"
+        - $ref: "#/components/parameters/SpanId"
+        - $ref: "#/components/parameters/ChannelId"
+        - $ref: "#/components/parameters/OriginatingApplicationCode"
+        - $ref: "#/components/parameters/CountryCode"
+        - $ref: "#/components/parameters/ApiVersion"
+        - $ref: "#/components/parameters/UserContext"
+      requestBody:
+        description: The Credit Application information
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreditRequest'
+      responses:
+        '200':
+          description: Returns a Credit Request response object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreditRequestResponse'
+        '400':
+          description: >-
+            Indicates that the server could not understand the request. This is
+            not the same as 422 which indicates a validation error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmptyDataResponse'
+        '401':
+          description: >-
+            Unauthorized.  This will be returned when no authentication
+            information is provided.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmptyDataResponse'
+        '403':
+          description: >-
+            The principal associated with the request does not have sufficient
+            rights to preform this operation on the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmptyDataResponse'
+        '404':
+          description: The requested resource was not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmptyDataResponse'
+        '422':
+          description: >-
+            The request was syntactically correct but was not semantically
+            correct. Usually indicating a validation problem.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmptyDataResponse'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmptyDataResponse'
+      security:
+        - oAuth2ClientCredentials:
+            - application.automotive-credit-requests.bcvc.update-credit-requests.write
+
+components:
+  schemas:
+    MessageType:
+      enum:
+        - CR
+        - CM
+      type: string
+      description: >-
+        Identifies if message is a Contract  Message (CM)  or (Credit
+        Application) CR
+    ApplicationRequestHeader:
+      type: object
+      properties:
+        version:
+          maxLength: 50
+          type: string
+          description: F and I specification version
+          nullable: true
+        application_request_dt:
+          type: string
+          description: Date and time of message creation
+          format: date-time
+          nullable: true
+        destination_code:
+          maxLength: 50
+          type: string
+          description: Destination code within Scotiabank
+          nullable: true
+        dealer_number:
+          maxLength: 50
+          type: string
+          description: Numeric value assigned by BNS to each dealership
+          nullable: true
+        dealer_sequence_number:
+          type: integer
+          description: A 1-up file sequence number. Values from 1 to 999999999
+          format: int32
+          nullable: true
+        message_type:
+          $ref: '#/components/schemas/MessageType'
+        print_generation_number:
+          type: integer
+          description: Unique number of version of printed documents
+          format: int32
+          nullable: true
+      additionalProperties: false
+      description: Credit application request header
+    CreditRequestType:
+      enum:
+        - ADD
+      type: string
+      description: Code for “ADD” and updates of transactions.
+    Language:
+      enum:
+        - E
+        - F
+      type: string
+      description: >-
+        Specifies language of funding documents created at the portal: English
+        or French. Allowable values are E, F
+    LoanType:
+      enum:
+        - LOAN
+        - LEASE
+      type: string
+      description: Specifies LOAN or LEASE
+    ApplicationType:
+      enum:
+        - AUTO
+        - GRADAUTO
+        - HOME
+        - LEISURE
+        - MOTORCYCLE
+        - MARINE
+        - RV
+        - MOBILE
+      type: string
+      description: >-
+        Specifies type of product being financed.  Allowable values are AUTO,
+        GRADAUTO, HOME, LEISURE, MOTORCYCLE, MARINE, RV, MOBILE
+    TransactionType:
+      enum:
+        - PERSONAL
+        - BUSINESS
+      type: string
+      description: 'Type of application. Allowable values are PERSONAL, BUSINESS'
+    TaxExemptReason:
+      enum:
+        - CertificateOfExemption
+        - Diplomatic
+        - FederalGovernment
+        - ProvincialGovernment
+        - SaskatchewanPSTExemptOnUsed
+        - CharitableOrganization
+        - Municipality
+        - NonProfitOrganization
+        - RateDifferenceLienOnTrade
+        - StatusIndian
+        - PaidUpFront
+      type: string
+      description: Reason for being exempt from PST
+    ImmigrantStatus:
+      enum:
+        - NotApplicable
+        - PermanentResidentsEconomicInvestorClass
+        - PermanentResidentsTargetedProfessionals
+        - PermanentResidentsOthers
+        - ForeignWorkers
+        - MazdaFirstTimeBuyer
+      type: string
+      description: This is the Scotiabank Start Right program
+    Money:
+      type: object
+      properties:
+        amount:
+          type: number
+          description: Amount expressed as a number of major currency units
+          format: double
+        currency:
+          maxLength: 3
+          type: string
+          description: 3 Letter currency code as defined by ISO-4217
+          nullable: true
+      additionalProperties: false
+    CodeDetail:
+      type: object
+      properties:
+        code:
+          maxLength: 50
+          type: string
+          description: Code for the field using this object
+          nullable: true
+        description:
+          maxLength: 255
+          type: string
+          description: Description for the field using this object.
+          nullable: true
+      additionalProperties: false
+      description: >-
+        Object to detail more information on field related with description and
+        code
+    Address:
+      type: object
+      properties:
+        address_key:
+          maxLength: 10
+          type: string
+          description: Id of the address
+          nullable: true
+        address_type:
+          maxLength: 50
+          type: string
+          description: Type of the address
+          nullable: true
+        address_active_ind:
+          type: boolean
+          description: Describe if the address is active or not
+        line_1_addr:
+          maxLength: 50
+          type: string
+          description: Street address
+          nullable: true
+        line_2_addr:
+          maxLength: 40
+          type: string
+          description: Street address
+          nullable: true
+        line_3_addr:
+          maxLength: 40
+          type: string
+          description: Street address
+          nullable: true
+        city:
+          maxLength: 25
+          type: string
+          description: Name or code of the city
+          nullable: true
+        state:
+          maxLength: 15
+          type: string
+          description: Name or code of the province/state
+          nullable: true
+        postal_cd:
+          maxLength: 9
+          type: string
+          description: Zip code of the address
+          nullable: true
+        country_cd:
+          $ref: '#/components/schemas/CodeDetail'
+        effective_date:
+          type: string
+          description: Start date identified with the address
+          format: date-time
+          nullable: true
+        end_date:
+          type: string
+          description: End date identified with the address
+          format: date-time
+          nullable: true
+        verify_method:
+          maxLength: 5
+          type: string
+          description: Verify method
+          nullable: true
+        apt_unit_floor:
+          maxLength: 10
+          type: string
+          description: 'Apt, unit or floor of the address'
+          nullable: true
+        additional_address_info:
+          maxLength: 20
+          type: string
+          description: "Json string to store additional country specific address info in key value pairs\r\nMexico implements keys: Municipality, colony Peru implements keys: zone_type_code, zone_type_descriptipion"
+          nullable: true
+      additionalProperties: false
+    Telephone:
+      type: object
+      properties:
+        contact_type_cd:
+          maxLength: 20
+          type: string
+          description: Telephone type
+          nullable: true
+        phone_area_cd:
+          maxLength: 4
+          type: string
+          description: Phone code number
+          nullable: true
+        phone_country_cd:
+          $ref: '#/components/schemas/CodeDetail'
+        phone_no:
+          maxLength: 20
+          type: string
+          description: Phone number
+          nullable: true
+        phone_extension_no:
+          maxLength: 5
+          type: string
+          description: Extension number.
+          nullable: true
+        full_telephone_no:
+          maxLength: 30
+          type: string
+          description: Full telephone number
+          nullable: true
+        phone_method_type_cd:
+          maxLength: 10
+          type: string
+          description: Phone type
+          nullable: true
+      additionalProperties: false
+    BusinessOwner:
+      type: object
+      properties:
+        key:
+          type: string
+          description: Business Owner key
+          nullable: true
+        first_name:
+          maxLength: 50
+          type: string
+          description: Owner's first name
+          nullable: true
+        last_name:
+          maxLength: 50
+          type: string
+          description: Owner's last name
+          nullable: true
+        position:
+          maxLength: 50
+          type: string
+          description: Position
+          nullable: true
+        address:
+          $ref: '#/components/schemas/Address'
+        home_phone:
+          $ref: '#/components/schemas/Telephone'
+        mobile_phone:
+          $ref: '#/components/schemas/Telephone'
+        percent_owned:
+          type: number
+          description: Percent the owner owns of the business
+          format: double
+          nullable: true
+      additionalProperties: false
+      description: Business owner
+    ApplicationInfo:
+      type: object
+      properties:
+        deal_key:
+          maxLength: 50
+          type: string
+          description: 'Dealer Internal Key. For re-submissions, this value must be sent.'
+          nullable: true
+        child_deal_key:
+          maxLength: 50
+          type: string
+          description: >-
+            Some systems when submitting and update to an application, will copy
+            the original application, resulting in a new key (dealkey).  In such
+            cases this field should be used to provide the new key.
+          nullable: true
+        request_type:
+          $ref: '#/components/schemas/CreditRequestType'
+        document_language:
+          $ref: '#/components/schemas/Language'
+        loan_type:
+          $ref: '#/components/schemas/LoanType'
+        app_type:
+          $ref: '#/components/schemas/ApplicationType'
+        source_contact:
+          maxLength: 100
+          type: string
+          description: Sales rep. Name
+          nullable: true
+        transaction_type:
+          $ref: '#/components/schemas/TransactionType'
+        pst_exempt_reason:
+          $ref: '#/components/schemas/TaxExemptReason'
+        gst_exempt_reason:
+          $ref: '#/components/schemas/TaxExemptReason'
+        gst_registrant:
+          type: boolean
+          description: Identifies GST Registrant
+          nullable: true
+        subvented_indicator:
+          type: boolean
+          description: Indicates if an application is subvented
+          nullable: true
+        sale_code:
+          maxLength: 50
+          type: string
+          description: >-
+            This value relates to the rate and term.  This is supplied to the
+            dealership by BNS.
+          nullable: true
+        pst_credit_for_liens:
+          maxLength: 50
+          type: string
+          description: >-
+            Based on province. All provinces are Yes, except BC, Alberta,
+            Newfoundland and the Territories
+          nullable: true
+        immigrant_status:
+          $ref: '#/components/schemas/ImmigrantStatus'
+        oem_privacy_consent:
+          type: boolean
+          description: OEM privacy consent
+          nullable: true
+        program_name:
+          maxLength: 100
+          type: string
+          description: Program name selected
+          nullable: true
+        volume_bonus:
+          maxLength: 100
+          type: string
+          description: Volume Bonus
+          nullable: true
+        custom_program_ind:
+          type: boolean
+          description: >-
+            Indicator for applications setup with custom programs. Allowable
+            values are Y and N
+          nullable: true
+        type_of_business:
+          maxLength: 50
+          type: string
+          description: Type of Business
+          nullable: true
+        annual_sales_of_business:
+          $ref: '#/components/schemas/Money'
+        payment_call:
+          type: boolean
+          description: Payment Call
+          nullable: true
+        ownership_of_business_info:
+          maxLength: 10
+          type: array
+          items:
+            $ref: '#/components/schemas/BusinessOwner'
+          description: Owners of the business.
+          nullable: true
+      additionalProperties: false
+      description: The application information
+    GaragingAddress:
+      type: object
+      properties:
+        driver_name:
+          maxLength: 100
+          type: string
+          description: DriverName
+          nullable: true
+        driver_phone:
+          $ref: '#/components/schemas/Telephone'
+        driver_address:
+          $ref: '#/components/schemas/Address'
+      additionalProperties: false
+      description: >-
+        Capture proper tax information for vehicle driver in different province
+        than primary applicant
+    ApplicantType:
+      enum:
+        - Primary
+        - PrimaryJoint
+        - Cosigner
+        - CosignerJoint
+      type: string
+      description: >-
+        Identifies Applicant as being \"Primary\", \"Primary-Joint\",
+        \"Cosigner\", \"Cosigner-Joint\"
+    MaritalStatus:
+      enum:
+        - Married
+        - Unmarried
+        - Separated
+      type: string
+      description: 'Allowable values are: Married,Unmarried,Separated'
+    Email:
+      type: object
+      properties:
+        email_address_text:
+          maxLength: 100
+          type: string
+          description: Electronic Email
+          nullable: true
+        email_method_type:
+          maxLength: 50
+          type: string
+          description: Email or website
+          nullable: true
+        email_type:
+          maxLength: 50
+          type: string
+          description: 'Email Type: business, personal'
+          nullable: true
+      additionalProperties: false
+    PersonalIdentification:
+      type: object
+      properties:
+        identification_type:
+          maxLength: 50
+          type: string
+          description: >-
+            Allowable values are DriversLicense, BirthCertificate,
+            CitizenshipCertificate, OldAgeSecurityCard, PermanentResidentCard,
+            Passport, Certificate Of Indian Status, CertificateOfNaturalization,
+            ImmigrationCanadaForm, ProvincialHealthInsurance,
+            SocialInsuranceCard, Other
+          nullable: true
+        identification_no:
+          maxLength: 50
+          type: string
+          description: Identification number
+          nullable: true
+        place_of_issue:
+          maxLength: 50
+          type: string
+          description: Place of issue
+          nullable: true
+        description:
+          maxLength: 255
+          type: string
+          description: Free form description of the identification
+          nullable: true
+        expiry_date:
+          type: string
+          description: Date of expiry (YYYY-MM-DD)
+          format: date
+          nullable: true
+      additionalProperties: false
+      description: PersonalIdentification
+    Personal:
+      type: object
+      properties:
+        applicant_type:
+          $ref: '#/components/schemas/ApplicantType'
+        trade_name_of_business:
+          maxLength: 100
+          type: string
+          description: TradeNameOfBusiness
+          nullable: true
+        legal_name_of_business:
+          maxLength: 100
+          type: string
+          description: >-
+            If Applicant Type is “Primary” and Transaction Type is “Business”
+            this field is required.
+          nullable: true
+        co_applicant_relationship:
+          maxLength: 50
+          type: string
+          description: >-
+            Relationship of Joint, Cosigner, Joint -Cosigner applicant to
+            primary applicant. Allowable values are: Spouse,Common-law,
+            Parent,Sibling,Other, Grandparent
+          nullable: true
+        marital_status:
+          $ref: '#/components/schemas/MaritalStatus'
+        language:
+          $ref: '#/components/schemas/Language'
+        title:
+          maxLength: 50
+          type: string
+          description: >-
+            M, Mme, Mlle, Mr., Mrs., Ms., Miss., Dr., DOCTOR. If Applicant Type
+            is “Primary” and Transaction Type is “Business” this field is not
+            required.
+          nullable: true
+        first_name:
+          maxLength: 50
+          type: string
+          description: >-
+            Applicants first name.  If Applicant Type is “Primary” and
+            Transaction Type is “Business” this field is not required.
+          nullable: true
+        middle_name:
+          maxLength: 50
+          type: string
+          description: Applicants middle name.
+          nullable: true
+        last_name:
+          maxLength: 50
+          type: string
+          description: >-
+            Applicants last name.  If Applicant Type is “Primary” and
+            Transaction Type is “Business” this field is not required.
+          nullable: true
+        suffix:
+          maxLength: 50
+          type: string
+          description: 'Applicant''s name suffix. Jr., Sr., II,III,IV,Esq'
+          nullable: true
+        email_address:
+          $ref: '#/components/schemas/Email'
+        tax_id:
+          maxLength: 9
+          type: string
+          description: Tax Id/SIN/SSN number of the customer to file taxes.
+          nullable: true
+        drivers_license:
+          maxLength: 50
+          type: string
+          description: Drivers lincense number.
+          nullable: true
+        maiden_name:
+          maxLength: 50
+          type: string
+          description: Maiden name
+          nullable: true
+        birth_date:
+          type: string
+          description: Date of birth (YYYY-MM-DD)
+          format: date
+          nullable: true
+        number_of_dependants:
+          type: integer
+          description: Number of dependents.
+          format: int32
+          nullable: true
+        identifications:
+          maxLength: 10
+          type: array
+          items:
+            $ref: '#/components/schemas/PersonalIdentification'
+          description: Identifications
+          nullable: true
+        bns_privacy_consent:
+          type: boolean
+          description: BNSPrivacyConsent
+          nullable: true
+      additionalProperties: false
+      description: Personal
+    ResidenceStatus:
+      enum:
+        - Renting
+        - OwnerBuying
+        - OwnerFreeAndClear
+        - LivingWithParents
+        - Other
+      type: string
+      description: >-
+        Status of applicant in relationship to residence. – Renting, Owner
+        Buying, owner Free and Clear, Living With Parents, Other
+    Residence:
+      type: object
+      properties:
+        address:
+          $ref: '#/components/schemas/Address'
+        home_phone:
+          $ref: '#/components/schemas/Telephone'
+        mobile_phone:
+          $ref: '#/components/schemas/Telephone'
+        residence_status:
+          $ref: '#/components/schemas/ResidenceStatus'
+        rent_mortgage_amount:
+          $ref: '#/components/schemas/Money'
+        landlord_mortgagor:
+          maxLength: 100
+          type: string
+          description: >-
+            Name of landlord incase the applicant is renting on the residence
+            address or mortgagor in case a financial institute provided mortgage
+            on the property.
+          nullable: true
+        address_telephone:
+          $ref: '#/components/schemas/Telephone'
+        previous_address:
+          $ref: '#/components/schemas/Address'
+        previous_duration_months:
+          type: integer
+          description: Number of months at previous address
+          format: int32
+          nullable: true
+      additionalProperties: false
+      description: Residence
+    PaymentFrequency:
+      enum:
+        - Weekly
+        - Monthly
+        - SemiMonthly
+        - BIWK
+        - Annually
+      type: string
+      description: Frequency
+    Employment:
+      type: object
+      properties:
+        employer_name:
+          maxLength: 100
+          type: string
+          description: Employer name
+          nullable: true
+        address:
+          $ref: '#/components/schemas/Address'
+        phone:
+          $ref: '#/components/schemas/Telephone'
+        duration_months:
+          type: integer
+          description: Duration months
+          format: int32
+          nullable: true
+        employer_contact:
+          maxLength: 100
+          type: string
+          description: Employer contact
+          nullable: true
+        employer_fax:
+          type: string
+          description: Employer fax
+          nullable: true
+        employer_phone:
+          $ref: '#/components/schemas/Telephone'
+        self_employed:
+          type: boolean
+          description: Self-employed
+          nullable: true
+        accountant_name:
+          maxLength: 100
+          type: string
+          description: Accountant Name if self Employed
+          nullable: true
+        accountant_phone:
+          $ref: '#/components/schemas/Telephone'
+        income:
+          $ref: '#/components/schemas/Money'
+        income_frequency:
+          $ref: '#/components/schemas/PaymentFrequency'
+        position:
+          maxLength: 50
+          type: string
+          description: >-
+            Now mandatory Eg.Programmer, Teacher, etc.If blank, a message will
+            be returned and the application will not be loaded until corrected
+          nullable: true
+        occupation:
+          maxLength: 50
+          type: string
+          description: >-
+            Full-Time, Part-Time, Self Empl, Retired, SnlSummer, SnlWinter.  If
+            blank, a message will be returned and the application will not be
+            loaded until corrected
+          nullable: true
+        occupation_type:
+          maxLength: 50
+          type: string
+          description: >-
+            Professional, Executive/Managerial, Clerical, Skilled Labour,
+            Semi-Skilled Labour, Craftsman, Sales/Advertising, Government, Auto
+            Worker, Farmer, Fisherman, Homemaker, Other If blank, a message will
+            be returned and the application will not be loaded until corrected
+          nullable: true
+        military:
+          type: boolean
+          description: In the Military - Y/N
+          nullable: true
+        paygrade:
+          maxLength: 50
+          type: string
+          description: Paygrade
+          nullable: true
+        supervisor:
+          maxLength: 100
+          type: string
+          description: Supervisor
+          nullable: true
+      additionalProperties: false
+      description: Applicant employment
+    EmploymentInformation:
+      type: object
+      properties:
+        current_employments:
+          maxLength: 10
+          type: array
+          items:
+            $ref: '#/components/schemas/Employment'
+          description: Current employments
+          nullable: true
+        previous_employment:
+          $ref: '#/components/schemas/Employment'
+      additionalProperties: false
+      description: Employment information
+    OtherIncome:
+      type: object
+      properties:
+        description:
+          maxLength: 255
+          type: string
+          description: Description
+          nullable: true
+        frequency:
+          $ref: '#/components/schemas/PaymentFrequency'
+        amount:
+          $ref: '#/components/schemas/Money'
+      additionalProperties: false
+      description: Income
+    Relative:
+      type: object
+      properties:
+        nearest_relative:
+          maxLength: 100
+          type: string
+          description: NearestRelative
+          nullable: true
+        address:
+          $ref: '#/components/schemas/Address'
+        phone:
+          $ref: '#/components/schemas/Telephone'
+        relationship:
+          maxLength: 50
+          type: string
+          description: Relationship
+          nullable: true
+      additionalProperties: false
+      description: Relative
+    Mortgage:
+      type: object
+      properties:
+        financed_by:
+          maxLength: 100
+          type: string
+          description: Financed By
+          nullable: true
+        purchase_price:
+          $ref: '#/components/schemas/Money'
+        balance_owed:
+          $ref: '#/components/schemas/Money'
+        monthly_payment:
+          $ref: '#/components/schemas/Money'
+      additionalProperties: false
+      description: Mortgage
+    Vehicle:
+      type: object
+      properties:
+        year:
+          type: integer
+          description: Year of car
+          format: int32
+          nullable: true
+        make:
+          maxLength: 100
+          type: string
+          description: Make of the car
+          nullable: true
+        model:
+          maxLength: 100
+          type: string
+          description: Model of the car
+          nullable: true
+        financed_by:
+          maxLength: 100
+          type: string
+          description: The financer of the car
+          nullable: true
+        balance_owed:
+          $ref: '#/components/schemas/Money'
+        monthly_payment:
+          $ref: '#/components/schemas/Money'
+      additionalProperties: false
+      description: Vehicle details
+    IndividualJoint:
+      enum:
+        - I
+        - J
+      type: string
+      description: >-
+        Indicator if the bank account is an individual account or a joint
+        account
+    Credit:
+      type: object
+      properties:
+        card_name:
+          maxLength: 100
+          type: string
+          description: CardName
+          nullable: true
+        card_number:
+          maxLength: 50
+          type: string
+          description: CardNumber
+          nullable: true
+        company:
+          maxLength: 100
+          type: string
+          description: Company
+          nullable: true
+        individual_joint:
+          $ref: '#/components/schemas/IndividualJoint'
+        credit_limit:
+          $ref: '#/components/schemas/Money'
+        balance_owed:
+          $ref: '#/components/schemas/Money'
+        monthly_payment:
+          $ref: '#/components/schemas/Money'
+      additionalProperties: false
+      description: Credit
+    OtherCredit:
+      type: object
+      properties:
+        name:
+          maxLength: 100
+          type: string
+          description: Name
+          nullable: true
+        account_number:
+          maxLength: 50
+          type: string
+          description: AccountNumber
+          nullable: true
+        location:
+          maxLength: 50
+          type: string
+          description: Location
+          nullable: true
+        individual_joint:
+          $ref: '#/components/schemas/IndividualJoint'
+        credit_limit:
+          $ref: '#/components/schemas/Money'
+        original_amount:
+          $ref: '#/components/schemas/Money'
+        balance_owed:
+          $ref: '#/components/schemas/Money'
+        monthly_payment:
+          $ref: '#/components/schemas/Money'
+      additionalProperties: false
+      description: OtherCredit
+    Liabilities:
+      type: object
+      properties:
+        mortgage:
+          $ref: '#/components/schemas/Mortgage'
+        car:
+          maxLength: 10
+          type: array
+          items:
+            $ref: '#/components/schemas/Vehicle'
+          description: Car
+          nullable: true
+        bank_card:
+          maxLength: 10
+          type: array
+          items:
+            $ref: '#/components/schemas/Credit'
+          description: Bank card
+          nullable: true
+        store_card:
+          maxLength: 10
+          type: array
+          items:
+            $ref: '#/components/schemas/Credit'
+          description: Store card
+          nullable: true
+        other_creditors:
+          maxLength: 10
+          type: array
+          items:
+            $ref: '#/components/schemas/OtherCredit'
+          description: Other creditors
+          nullable: true
+        bankruptcy_in_last7_years:
+          type: boolean
+          description: Bankruptcy In Last 7 Years
+          nullable: true
+        guarantor:
+          type: boolean
+          description: Guarantor
+          nullable: true
+        cars_repossessed:
+          type: boolean
+          description: Cars repossessed
+          nullable: true
+        defendant_in_legal_action:
+          type: boolean
+          description: Defendant In Legal Action
+          nullable: true
+        alimony_child_support:
+          type: boolean
+          description: Alimony Child Support
+          nullable: true
+        alimony_child_support_amount:
+          type: number
+          description: Alimony Child Support Amount
+          format: double
+          nullable: true
+      additionalProperties: false
+      description: Applicants liabilities
+    Account:
+      type: object
+      properties:
+        account_number:
+          maxLength: 50
+          type: string
+          description: The number of the bank account
+          nullable: true
+        name:
+          maxLength: 100
+          type: string
+          description: The name of the bank account
+          nullable: true
+        address:
+          $ref: '#/components/schemas/Address'
+        balance:
+          $ref: '#/components/schemas/Money'
+        individual_joint:
+          $ref: '#/components/schemas/IndividualJoint'
+      additionalProperties: false
+      description: Bank Account information
+    Assets:
+      type: object
+      properties:
+        chequing_account:
+          maxLength: 10
+          type: array
+          items:
+            $ref: '#/components/schemas/Account'
+          description: The chequing account
+          nullable: true
+        saving_account:
+          maxLength: 10
+          type: array
+          items:
+            $ref: '#/components/schemas/Account'
+          description: The savings account
+          nullable: true
+        cash_value_life_insurance:
+          type: number
+          description: Life insurance cash value
+          format: double
+          nullable: true
+        certificates_of_deposit:
+          type: number
+          description: Certificates of deposit
+          format: double
+          nullable: true
+        last_car_financed:
+          $ref: '#/components/schemas/Vehicle'
+      additionalProperties: false
+      description: Assets
+    Applicant:
+      type: object
+      properties:
+        personal:
+          $ref: '#/components/schemas/Personal'
+        residence_info:
+          $ref: '#/components/schemas/Residence'
+        employment_info:
+          $ref: '#/components/schemas/EmploymentInformation'
+        other_income:
+          maxLength: 10
+          type: array
+          items:
+            $ref: '#/components/schemas/OtherIncome'
+          description: other income information
+          nullable: true
+        relative_info:
+          $ref: '#/components/schemas/Relative'
+        liabilities:
+          $ref: '#/components/schemas/Liabilities'
+        assets:
+          $ref: '#/components/schemas/Assets'
+        key:
+          maxLength: 50
+          type: string
+          description: the applicant key
+          nullable: true
+      additionalProperties: false
+      description: The applicant
+    LoanRequest:
+      type: object
+      properties:
+        cash_price:
+          $ref: '#/components/schemas/Money'
+        cash_down:
+          $ref: '#/components/schemas/Money'
+        manufacture_rebate:
+          type: number
+          description: ManufactureRebate
+          format: double
+          nullable: true
+        trade_in_allowance:
+          $ref: '#/components/schemas/Money'
+        less_payoff:
+          $ref: '#/components/schemas/Money'
+        life_disability_premium:
+          $ref: '#/components/schemas/Money'
+        agreement_registration_fee:
+          $ref: '#/components/schemas/Money'
+        extended_warranty:
+          maxLength: 100
+          type: string
+          description: ExtendedWarranty
+          nullable: true
+        is_manufacture_extended_warranty:
+          type: boolean
+          description: IsManufactureExtendedWarranty
+          nullable: true
+        rust_proofing:
+          maxLength: 100
+          type: string
+          description: RustProofing
+          nullable: true
+        scotch_guard_other:
+          maxLength: 100
+          type: string
+          description: ScotchGuardOther
+          nullable: true
+        rate:
+          type: number
+          description: Rate
+          format: double
+          nullable: true
+        rate_type:
+          maxLength: 100
+          type: string
+          description: RateType
+          nullable: true
+        spread:
+          maxLength: 100
+          type: string
+          description: Spread
+          nullable: true
+        term:
+          maxLength: 100
+          type: string
+          description: Term
+          nullable: true
+        early_maturity_term:
+          maxLength: 100
+          type: string
+          description: EarlyMaturityTerm
+          nullable: true
+        number_months_deferred:
+          type: integer
+          description: NumberMonthsDeferred
+          format: int32
+        payment:
+          $ref: '#/components/schemas/Money'
+        finance_amount:
+          $ref: '#/components/schemas/Money'
+        invoice:
+          $ref: '#/components/schemas/Money'
+        msrp:
+          $ref: '#/components/schemas/Money'
+      additionalProperties: false
+      description: Loan
+    LeaseRequest:
+      type: object
+      properties:
+        single_payment_lease:
+          maxLength: 100
+          type: string
+          description: SinglePaymentLease
+          nullable: true
+        selling_price:
+          $ref: '#/components/schemas/Money'
+        dealer_installed_options1:
+          maxLength: 255
+          type: string
+          description: DealerInstalledOptions1
+          nullable: true
+        dealer_installed_options2:
+          maxLength: 255
+          type: string
+          description: DealerInstalledOptions2
+          nullable: true
+        life_disability_insurance:
+          $ref: '#/components/schemas/Money'
+        lease_registration_fee:
+          $ref: '#/components/schemas/Money'
+        vehicle_registration_fee:
+          $ref: '#/components/schemas/Money'
+        manufacturer_warranty:
+          maxLength: 255
+          type: string
+          description: ManufacturerWarranty
+          nullable: true
+        lease_service_fee:
+          $ref: '#/components/schemas/Money'
+        other:
+          maxLength: 255
+          type: string
+          description: Other
+          nullable: true
+        lien:
+          maxLength: 255
+          type: string
+          description: Lien
+          nullable: true
+        cash_down:
+          $ref: '#/components/schemas/Money'
+        trade_in_amount:
+          $ref: '#/components/schemas/Money'
+        capitalized_cost:
+          $ref: '#/components/schemas/Money'
+        non_taxable_amount:
+          $ref: '#/components/schemas/Money'
+        adjusted_msrp:
+          $ref: '#/components/schemas/Money'
+        residual_value_guide_date:
+          type: string
+          description: Residual Value Guide Date (YYYY-MM-DD)
+          format: date
+          nullable: true
+        residual_value_guide:
+          maxLength: 255
+          type: string
+          description: ResidualValueGuide
+          nullable: true
+        equipment_adds:
+          maxLength: 255
+          type: string
+          description: EquipmentAdds
+          nullable: true
+        equipment_deducts:
+          maxLength: 255
+          type: string
+          description: EquipmentDeducts
+          nullable: true
+        excess_km_on_delivery:
+          type: integer
+          description: ExcessKmOnDelivery
+          format: int32
+          nullable: true
+        excess_km_on_delivery_rate:
+          type: string
+          description: ExcessKmOnDeliveryRate
+          nullable: true
+        excess_km_on_delivery_amount:
+          $ref: '#/components/schemas/Money'
+        excess_contracted_km_on_delivery:
+          maxLength: 100
+          type: integer
+          description: ExcessContractedKmOnDelivery
+          format: int32
+        excess_contracted_km_on_delivery_rate:
+          type: number
+          description: ExcessContractedKmOnDeliveryRate
+          format: double
+          nullable: true
+        excess_contracted_km_on_delivery_amount:
+          $ref: '#/components/schemas/Money'
+        low_contracted_km_on_delivery:
+          type: integer
+          description: LowContractedKmOnDelivery
+          format: int32
+        low_contracted_km_on_delivery_rate:
+          type: number
+          description: LowContractedKmOnDeliveryRate
+          format: double
+          nullable: true
+        low_contracted_km_on_delivery_amount:
+          $ref: '#/components/schemas/Money'
+        residual_value:
+          $ref: '#/components/schemas/Money'
+        total_depreciation:
+          $ref: '#/components/schemas/Money'
+        term:
+          maxLength: 100
+          type: string
+          description: Term
+          nullable: true
+        monthly_depreciation:
+          $ref: '#/components/schemas/Money'
+        total_interest_cost:
+          $ref: '#/components/schemas/Money'
+        interest_factor:
+          type: number
+          description: InterestFactor
+          format: double
+          nullable: true
+        monthly_interest_cost:
+          $ref: '#/components/schemas/Money'
+        fixed_monthly_rental:
+          $ref: '#/components/schemas/Money'
+        gsthst_rate:
+          type: number
+          description: GSTHSTRate
+          format: double
+          nullable: true
+        gsthst_amount_on_rental:
+          $ref: '#/components/schemas/Money'
+        pst_rate:
+          type: number
+          description: PSTRate
+          format: double
+          nullable: true
+        pst_amount_on_rental:
+          $ref: '#/components/schemas/Money'
+        total_monthly_payment:
+          $ref: '#/components/schemas/Money'
+        total_down_payment:
+          $ref: '#/components/schemas/Money'
+        gsthst_amount_on_down_payment:
+          $ref: '#/components/schemas/Money'
+        pst_amount_on_down_payment:
+          $ref: '#/components/schemas/Money'
+        security_deposit:
+          $ref: '#/components/schemas/Money'
+        vehicle_registration_fee_paid:
+          $ref: '#/components/schemas/Money'
+        excess_contracted_km_deposit:
+          $ref: '#/components/schemas/Money'
+        excess_contracted_km_deposit_rate:
+          type: number
+          description: ExcessContractedKmDepositRate
+          format: double
+          nullable: true
+        excess_contracted_km_deposit_amount:
+          $ref: '#/components/schemas/Money'
+        lease_registration_fee_paid:
+          $ref: '#/components/schemas/Money'
+        lease_service_fee_paid:
+          $ref: '#/components/schemas/Money'
+        other_payment_due_at_signing:
+          $ref: '#/components/schemas/Money'
+        total_cash_due_at_signing:
+          $ref: '#/components/schemas/Money'
+        adjusted_capitalized_cost:
+          $ref: '#/components/schemas/Money'
+        dealer_advance:
+          $ref: '#/components/schemas/Money'
+      additionalProperties: false
+      description: Lease
+    ManufacturerInstalledOption:
+      type: object
+      properties:
+        description:
+          maxLength: 255
+          type: string
+          description: Description
+          nullable: true
+        consumer_amount:
+          $ref: '#/components/schemas/Money'
+        residualized_amount:
+          $ref: '#/components/schemas/Money'
+      additionalProperties: false
+      description: ManufacturerInstalledOption
+    DealerInstalledOption:
+      type: object
+      properties:
+        description:
+          maxLength: 255
+          type: string
+          description: Description
+          nullable: true
+        amount:
+          $ref: '#/components/schemas/Money'
+      additionalProperties: false
+      description: Dealer installed option information
+    VehicleFinanceAmount:
+      type: object
+      properties:
+        cash_price:
+          $ref: '#/components/schemas/Money'
+        manufacturer_installed_options:
+          maxLength: 10
+          type: array
+          items:
+            $ref: '#/components/schemas/ManufacturerInstalledOption'
+          description: ManufacturerInstalledOptions
+          nullable: true
+        dealer_installed_options:
+          maxLength: 10
+          type: array
+          items:
+            $ref: '#/components/schemas/DealerInstalledOption'
+          description: DealerInstalledOptions
+          nullable: true
+        van_conversion_upfit_cost:
+          maxLength: 50
+          type: string
+          description: VanConversionUpfitCost
+          nullable: true
+        total_selling_price:
+          $ref: '#/components/schemas/Money'
+        total_amount_financed:
+          $ref: '#/components/schemas/Money'
+        total_cap_cost:
+          $ref: '#/components/schemas/Money'
+      additionalProperties: false
+      description: VehicleFinanceAmount
+    DownPayment:
+      type: object
+      properties:
+        cash_down:
+          $ref: '#/components/schemas/Money'
+        manufacturer_rebate:
+          $ref: '#/components/schemas/Money'
+        other_down:
+          $ref: '#/components/schemas/Money'
+        rebate_cash_customer:
+          $ref: '#/components/schemas/Money'
+        trade_in_allowance:
+          $ref: '#/components/schemas/Money'
+        less_payoff:
+          $ref: '#/components/schemas/Money'
+        lien_holder:
+          maxLength: 100
+          type: string
+          description: Lien holder
+          nullable: true
+        total_down_payment:
+          $ref: '#/components/schemas/Money'
+      additionalProperties: false
+      description: Down payment information
+    InsuranceAndWarrantyDetail:
+      type: object
+      properties:
+        id:
+          maxLength: 50
+          type: string
+          description: ID
+          nullable: true
+        name:
+          maxLength: 100
+          type: string
+          description: Name
+          nullable: true
+        amount:
+          $ref: '#/components/schemas/Money'
+        pst_rate:
+          type: number
+          description: PSTRate
+          format: double
+          nullable: true
+        pst_amount:
+          $ref: '#/components/schemas/Money'
+        gsthst_rate:
+          type: number
+          description: GSTHSTRate
+          format: double
+          nullable: true
+        gsthst_amount:
+          $ref: '#/components/schemas/Money'
+      additionalProperties: false
+      description: Insurance And Warranty Detail
+    InsuranceAndWarranty:
+      type: object
+      properties:
+        insurance_and_warranty_details:
+          maxLength: 10
+          type: array
+          items:
+            $ref: '#/components/schemas/InsuranceAndWarrantyDetail'
+          description: Insurance And Warranty Details
+          nullable: true
+        total_insurance_warranty:
+          $ref: '#/components/schemas/Money'
+        total_tax_insurance_warranty:
+          $ref: '#/components/schemas/Money'
+      additionalProperties: false
+      description: Insurance And Warranty
+    FeesAndTaxes:
+      type: object
+      properties:
+        tax_override_province:
+          maxLength: 50
+          type: string
+          description: TaxOverrideProvince
+          nullable: true
+        pst_rate:
+          type: number
+          description: PSTRate
+          format: double
+          nullable: true
+        pst_charged:
+          $ref: '#/components/schemas/Money'
+        gsthst_rate:
+          type: number
+          description: GSTHSTRate
+          format: double
+          nullable: true
+        gsthst_charged:
+          $ref: '#/components/schemas/Money'
+        pst_taxable_fee:
+          $ref: '#/components/schemas/Money'
+        gsthst_taxable_fee:
+          $ref: '#/components/schemas/Money'
+        air_condition_tax:
+          $ref: '#/components/schemas/Money'
+        enviro_levy_tax:
+          $ref: '#/components/schemas/Money'
+        gst_tax_credit_on_trade:
+          $ref: '#/components/schemas/Money'
+        tax_credit:
+          $ref: '#/components/schemas/Money'
+        other_taxable:
+          $ref: '#/components/schemas/Money'
+        other_taxable_description:
+          maxLength: 255
+          type: string
+          description: OtherTaxableDescription
+          nullable: true
+        other_non_taxable:
+          $ref: '#/components/schemas/Money'
+        other_non_taxable_description:
+          maxLength: 255
+          type: string
+          description: OtherNonTaxableDescription
+          nullable: true
+        government_license_fee:
+          $ref: '#/components/schemas/Money'
+        government_inspection_fee:
+          $ref: '#/components/schemas/Money'
+        vehicle_registration_fee:
+          $ref: '#/components/schemas/Money'
+        documentation_fee:
+          $ref: '#/components/schemas/Money'
+        dealer_fees_not_paid:
+          $ref: '#/components/schemas/Money'
+        lease_service_fee:
+          $ref: '#/components/schemas/Money'
+        total_fees_and_taxes:
+          $ref: '#/components/schemas/Money'
+      additionalProperties: false
+      description: Fees And Taxes
+    SpecialRateDiscount:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Id
+          nullable: true
+        description:
+          maxLength: 255
+          type: string
+          description: Description
+          nullable: true
+        percent_adjustment:
+          type: number
+          description: PercentAdjustment
+          format: double
+          nullable: true
+        form_id:
+          maxLength: 50
+          type: string
+          description: FormID
+          nullable: true
+      additionalProperties: false
+      description: SpecialRateDiscount
+    SecurityDeposit:
+      type: object
+      properties:
+        deposit_number:
+          maxLength: 50
+          type: string
+          description: Deposit number
+          nullable: true
+        amount:
+          $ref: '#/components/schemas/Money'
+        percent_adjustment:
+          type: number
+          description: PercentAdjustment
+          format: double
+          nullable: true
+      additionalProperties: false
+      description: SecurityDeposit
+    RatesandTerms:
+      type: object
+      properties:
+        program_id:
+          maxLength: 50
+          type: string
+          description: ProgramID
+          nullable: true
+        program_name:
+          maxLength: 100
+          type: string
+          description: ProgramName
+          nullable: true
+        program_start_date:
+          type: string
+          description: Program Start Date (YYYY-MM-DD)
+          format: date
+          nullable: true
+        program_end_date:
+          type: string
+          description: Program End Date (YYYY-MM-DD)
+          format: date
+          nullable: true
+        program_expiry_date:
+          type: string
+          description: Program Expiry Date (YYYY-MM-DD)
+          format: date
+          nullable: true
+        program_protection:
+          maxLength: 100
+          type: string
+          description: ProgramProtection
+          nullable: true
+        contract_delivery_date:
+          type: string
+          description: Contract Delivery Date (YYYY-MM-DD)
+          format: date
+          nullable: true
+        rate_type:
+          maxLength: 50
+          type: string
+          description: RateType
+          nullable: true
+        program_rate:
+          type: number
+          description: ProgramRate
+          format: double
+          nullable: true
+        program_spread:
+          maxLength: 50
+          type: string
+          description: ProgramSpread
+          nullable: true
+        sub_base_rate:
+          type: number
+          description: SubBaseRate
+          format: double
+          nullable: true
+        blended_rate:
+          type: number
+          description: BlendedRate
+          format: double
+          nullable: true
+        special_rate_discounts:
+          maxLength: 10
+          type: array
+          items:
+            $ref: '#/components/schemas/SpecialRateDiscount'
+          description: SpecialRateDiscounts
+          nullable: true
+        security_deposits:
+          $ref: '#/components/schemas/SecurityDeposit'
+        buydown_percent:
+          type: number
+          description: BuydownPercent
+          format: double
+          nullable: true
+        final_interest_rate:
+          type: number
+          description: FinalInterestRate
+          format: double
+          nullable: true
+        monthly_factor:
+          type: number
+          description: MonthlyFactor
+          format: double
+          nullable: true
+        apr:
+          maxLength: 50
+          type: string
+          description: APR
+          nullable: true
+        amortization:
+          maxLength: 50
+          type: string
+          description: Amortization
+          nullable: true
+        term:
+          maxLength: 50
+          type: string
+          description: Term
+          nullable: true
+        number_months_deferred_mfr:
+          type: integer
+          description: NumberMonthsDeferredMfr
+          format: int32
+        number_months_deferred_dealer:
+          type: integer
+          description: NumberMonthsDeferredDealer
+          format: int32
+        cost_of_borrowing:
+          $ref: '#/components/schemas/Money'
+        dealer_deferred_interest:
+          type: number
+          description: DealerDeferredInterest
+          format: double
+          nullable: true
+        dealer_buy_down_amount:
+          $ref: '#/components/schemas/Money'
+        mfr_deferred_interest_amount:
+          $ref: '#/components/schemas/Money'
+        subvented_amount:
+          $ref: '#/components/schemas/Money'
+        volume_bonus:
+          maxLength: 50
+          type: string
+          description: VolumeBonus
+          nullable: true
+        single_payment_lease:
+          maxLength: 50
+          type: string
+          description: SinglePaymentLease
+          nullable: true
+      additionalProperties: false
+      description: RatesandTerms
+    DueAtSigning:
+      type: object
+      properties:
+        cash_down_pst:
+          $ref: '#/components/schemas/Money'
+        cash_down_gsthst:
+          $ref: '#/components/schemas/Money'
+        net_trade_pst:
+          $ref: '#/components/schemas/Money'
+        net_trade_gsthst:
+          $ref: '#/components/schemas/Money'
+        other_description1:
+          maxLength: 255
+          type: string
+          description: 'Other description #1'
+          nullable: true
+        other_amount1:
+          $ref: '#/components/schemas/Money'
+        other_description2:
+          maxLength: 255
+          type: string
+          description: 'Other description #2'
+          nullable: true
+        other_amount2:
+          $ref: '#/components/schemas/Money'
+        vehicle_registration_fee_paid_up_front:
+          $ref: '#/components/schemas/Money'
+        lease_service_fees_paid_up_front:
+          $ref: '#/components/schemas/Money'
+        total_due_at_signing:
+          $ref: '#/components/schemas/Money'
+      additionalProperties: false
+      description: Due at signing information
+    Payment:
+      type: object
+      properties:
+        frequency:
+          $ref: '#/components/schemas/PaymentFrequency'
+        reg_payment:
+          $ref: '#/components/schemas/Money'
+        monthly_payment:
+          $ref: '#/components/schemas/Money'
+        first_payment_amount:
+          $ref: '#/components/schemas/Money'
+        first_payment_date:
+          type: string
+          description: First Payment Date (YYYY-MM-DD)
+          format: date
+          nullable: true
+        base_payment:
+          $ref: '#/components/schemas/Money'
+      additionalProperties: false
+      description: Payment
+    Residual:
+      type: object
+      properties:
+        msrp:
+          $ref: '#/components/schemas/Money'
+        residual_amount:
+          $ref: '#/components/schemas/Money'
+        vin_decoded:
+          maxLength: 255
+          type: string
+          description: VINDecoded
+          nullable: true
+        invoice:
+          $ref: '#/components/schemas/Money'
+        adjusted_msrp:
+          $ref: '#/components/schemas/Money'
+        residual_percent:
+          type: number
+          description: ResidualPercent
+          format: double
+          nullable: true
+        business_adjustment_percent:
+          type: number
+          description: BusinessAdjustmentPercent
+          format: double
+          nullable: true
+        low_km_adjustment_percent:
+          type: number
+          description: LowKMAdjustmentPercent
+          format: double
+          nullable: true
+      additionalProperties: false
+      description: Residual
+    MileageAllowance:
+      type: object
+      properties:
+        km_allowance_option:
+          type: integer
+          description: KMAllowanceOption
+          format: int32
+          nullable: true
+        annual_km_allowed:
+          type: integer
+          description: AnnualKmAllowed
+          format: int32
+          nullable: true
+        annual_km_contracted:
+          type: integer
+          description: AnnualKMContracted
+          format: int32
+          nullable: true
+        km_at_end_of_lease:
+          type: integer
+          description: KmAtEndOfLease
+          format: int32
+          nullable: true
+        excess_km_on_delivery_allowed:
+          type: integer
+          description: ExcessKmOnDeliveryAllowed
+          format: int32
+          nullable: true
+        excess_km_on_delivery:
+          type: integer
+          description: ExcessKmOnDelivery
+          format: int32
+          nullable: true
+        excess_km_on_delivery_rate:
+          type: number
+          description: ExcessKmOnDeliveryRate
+          format: double
+          nullable: true
+        excess_km_on_delivery_amount:
+          $ref: '#/components/schemas/Money'
+        excess_contracted_km_on_delivery:
+          type: integer
+          description: ExcessContractedKmOnDelivery
+          format: int32
+          nullable: true
+        excess_contracted_km_on_delivery_rate:
+          type: number
+          description: ExcessContractedKmOnDeliveryRate
+          format: double
+          nullable: true
+        excess_contracted_km_on_delivery_amount:
+          $ref: '#/components/schemas/Money'
+      additionalProperties: false
+      description: MileageAllowance
+    ContractMessage:
+      type: object
+      properties:
+        vehicle_finance_amount:
+          $ref: '#/components/schemas/VehicleFinanceAmount'
+        down_payment:
+          $ref: '#/components/schemas/DownPayment'
+        insurance_and_warranty:
+          $ref: '#/components/schemas/InsuranceAndWarranty'
+        fees_and_taxes:
+          $ref: '#/components/schemas/FeesAndTaxes'
+        ratesand_terms:
+          $ref: '#/components/schemas/RatesandTerms'
+        due_at_signing:
+          $ref: '#/components/schemas/DueAtSigning'
+        payment:
+          $ref: '#/components/schemas/Payment'
+        residual:
+          $ref: '#/components/schemas/Residual'
+        km:
+          $ref: '#/components/schemas/MileageAllowance'
+      additionalProperties: false
+      description: Contract message
+    VehicleStatus:
+      enum:
+        - None
+        - New
+        - Used
+      type: string
+      description: The status of the vehicle
+    Collateral:
+      type: object
+      properties:
+        intended_use:
+          maxLength: 255
+          type: string
+          description: Intended Use
+          nullable: true
+        year:
+          type: integer
+          description: Year
+          format: int32
+        make:
+          maxLength: 100
+          type: string
+          description: Make
+          nullable: true
+        model:
+          maxLength: 100
+          type: string
+          description: Model
+          nullable: true
+        vehicle_status:
+          $ref: '#/components/schemas/VehicleStatus'
+        vehicle_type:
+          maxLength: 50
+          type: string
+          description: Vehicle type
+          nullable: true
+        mileage:
+          maxLength: 50
+          type: string
+          description: Mileage
+          nullable: true
+        body_style:
+          maxLength: 50
+          type: string
+          description: Body style
+          nullable: true
+        series:
+          maxLength: 50
+          type: string
+          description: Series
+          nullable: true
+        model_number:
+          maxLength: 50
+          type: string
+          description: Model number
+          nullable: true
+        uvc:
+          maxLength: 50
+          type: string
+          description: uvc
+          nullable: true
+        vin:
+          maxLength: 17
+          type: string
+          description: vin
+          nullable: true
+        ac:
+          type: boolean
+          description: ac
+          nullable: true
+        tape_cd:
+          type: boolean
+          description: Tape CD
+          nullable: true
+        cruise:
+          type: boolean
+          description: Cruise
+          nullable: true
+        power_windows:
+          type: boolean
+          description: Power windows
+          nullable: true
+        alum_wheels:
+          type: boolean
+          description: Aluminum wheels
+          nullable: true
+        sun_roof:
+          type: boolean
+          description: Sun roof
+          nullable: true
+        four_wd:
+          type: boolean
+          description: Four wheel drive
+          nullable: true
+        manual_trans:
+          type: boolean
+          description: Manual transmission
+          nullable: true
+        power_seats:
+          type: boolean
+          description: Power seats
+          nullable: true
+        t_roof:
+          type: boolean
+          description: T roof
+          nullable: true
+        automatic_trans:
+          type: boolean
+          description: Automatic transmission
+          nullable: true
+        rear_ac:
+          type: boolean
+          description: Rear AC
+          nullable: true
+        power_moon_roof:
+          type: boolean
+          description: Power moon roof
+          nullable: true
+        panorama_roof:
+          type: boolean
+          description: Panorama roof
+          nullable: true
+        leather_seats:
+          type: boolean
+          description: Leather seats
+          nullable: true
+        power_steering:
+          type: boolean
+          description: Power steering
+          nullable: true
+        engine_upgrade:
+          type: boolean
+          description: Engine upgrade
+          nullable: true
+        diesel:
+          type: boolean
+          description: Diesel
+          nullable: true
+        turbo_diesel:
+          type: boolean
+          description: Turbo diesel
+          nullable: true
+        sport_wheels:
+          type: boolean
+          description: Sport wheels
+          nullable: true
+        chrome_wheels:
+          type: boolean
+          description: Chrome wheels
+          nullable: true
+        alloy_wheels:
+          type: boolean
+          description: Alloy wheels
+          nullable: true
+        hatch_roof:
+          type: boolean
+          description: Hatch roof
+          nullable: true
+        hard_top:
+          type: boolean
+          description: Hard top
+          nullable: true
+        radio_upgrade:
+          type: boolean
+          description: Radio upgrade
+          nullable: true
+        stereo:
+          type: boolean
+          description: Stereo
+          nullable: true
+        extra_door:
+          type: boolean
+          description: Extra door
+          nullable: true
+        mftr_package1:
+          type: boolean
+          description: Manufacturer package 1
+          nullable: true
+        mftr_package2:
+          type: boolean
+          description: Manufacturer package 2
+          nullable: true
+        mftr_package3:
+          type: boolean
+          description: Manufacturer package 3
+          nullable: true
+        mftr_package4:
+          type: boolean
+          description: Manufacturer package 4
+          nullable: true
+        additional_options:
+          maxLength: 10
+          type: array
+          items:
+            type: string
+          description: Additional options
+          nullable: true
+        option_description:
+          maxLength: 10
+          type: array
+          items:
+            type: string
+          description: Option description
+          nullable: true
+        stock_number:
+          maxLength: 50
+          type: string
+          description: Stock number
+          nullable: true
+        license_plate_number:
+          maxLength: 50
+          type: string
+          description: License plate number
+          nullable: true
+        number_of_doors:
+          maxLength: 50
+          type: integer
+          description: Number of doors
+          format: int32
+        number_of_cylinders:
+          maxLength: 50
+          type: integer
+          description: Number of cylinders
+          format: int32
+        colour:
+          maxLength: 50
+          type: string
+          description: Colour
+          nullable: true
+      additionalProperties: false
+      description: Collateral
+    AdditionalCollateral:
+      type: object
+      properties:
+        vehicle_status:
+          $ref: '#/components/schemas/VehicleStatus'
+        year:
+          type: integer
+          description: The year of the vehicle
+          format: int32
+          nullable: true
+        make:
+          maxLength: 100
+          type: string
+          description: The make of the vehicle
+          nullable: true
+        model:
+          maxLength: 100
+          type: string
+          description: The model of the vehicle
+          nullable: true
+        size:
+          maxLength: 50
+          type: string
+          description: The size of the vehicle
+          nullable: true
+        serial_number:
+          maxLength: 50
+          type: string
+          description: The serial number of vehicle
+          nullable: true
+      additionalProperties: false
+      description: Additional collateral information
+    TradeIn:
+      type: object
+      properties:
+        year:
+          type: integer
+          description: Year
+          format: int32
+          nullable: true
+        make:
+          maxLength: 100
+          type: string
+          description: Make
+          nullable: true
+        model:
+          maxLength: 100
+          type: string
+          description: Model
+          nullable: true
+        body_style:
+          maxLength: 100
+          type: string
+          description: BodyStyle
+          nullable: true
+        vin:
+          maxLength: 17
+          type: string
+          description: VIN
+          nullable: true
+        monthly_payment_amount:
+          $ref: '#/components/schemas/Money'
+      additionalProperties: false
+      description: TradeIn
+    PreAuthorizedDebit:
+      type: object
+      properties:
+        bank_name:
+          maxLength: 100
+          type: string
+          description: BankName
+          nullable: true
+        address:
+          $ref: '#/components/schemas/Address'
+        institution_number:
+          maxLength: 50
+          type: string
+          description: InstitutionNumber
+          nullable: true
+        transit_number:
+          maxLength: 50
+          type: string
+          description: TransitNumber
+          nullable: true
+        account_number:
+          maxLength: 50
+          type: string
+          description: AccountNumber
+          nullable: true
+      additionalProperties: false
+      description: PreAuthorizedDebit
+    Notes:
+      type: object
+      properties:
+        note:
+          maxLength: 255
+          type: string
+          description: Note
+          nullable: true
+      additionalProperties: false
+      description: Notes
+    ApplicationDetails:
+      type: object
+      properties:
+        application_info:
+          $ref: '#/components/schemas/ApplicationInfo'
+        garaging_address:
+          $ref: '#/components/schemas/GaragingAddress'
+        applicants:
+          maxLength: 10
+          type: array
+          items:
+            $ref: '#/components/schemas/Applicant'
+          description: >-
+            Applicants information. There can be up to 1 to 6 applicants per
+            application: 1st  Primary, 2nd Primary-Joint, 3rd and 5th Cosigner,
+            4th and 6th Cosigner-Joint
+          nullable: true
+        loan:
+          $ref: '#/components/schemas/LoanRequest'
+        lease:
+          $ref: '#/components/schemas/LeaseRequest'
+        contract_message:
+          $ref: '#/components/schemas/ContractMessage'
+        collateral:
+          $ref: '#/components/schemas/Collateral'
+        additional_collateral:
+          maxLength: 10
+          type: array
+          items:
+            $ref: '#/components/schemas/AdditionalCollateral'
+          description: >-
+            The additional collateral information for the credit application
+            request
+          nullable: true
+        trade_in:
+          maxLength: 10
+          type: array
+          items:
+            $ref: '#/components/schemas/TradeIn'
+          description: The Trade-in information for the credit application request
+          nullable: true
+        pre_authorized_debit:
+          $ref: '#/components/schemas/PreAuthorizedDebit'
+        notes:
+          maxLength: 255
+          type: array
+          items:
+            $ref: '#/components/schemas/Notes'
+          description: The notes that are associated with the credit application request
+          nullable: true
+      additionalProperties: false
+      description: The details of the application request
+    ApplicationRequest:
+      type: object
+      properties:
+        app_details_tags:
+          $ref: '#/components/schemas/ApplicationRequestHeader'
+        application:
+          $ref: '#/components/schemas/ApplicationDetails'
+      additionalProperties: false
+      description: The application request information
+    CreditRequest:
+      type: object
+      properties:
+        application_request:
+          $ref: '#/components/schemas/ApplicationRequest'
+      additionalProperties: false
+      description: Credit Application request message
+    ApplicationId:
+      type: object
+      properties:
+        application_id:
+          maxLength: 50
+          type: string
+          description: Application Identifier
+          nullable: true
+      additionalProperties: false
+      description: ApplicationId DTO Response
+    ResponseNotification:
+      type: object
+      properties:
+        code:
+          maxLength: 50
+          type: string
+          description: Gets or Sets Code
+          nullable: true
+        source:
+          maxLength: 50
+          type: string
+          description: Gets or Sets Source
+          nullable: true
+        severity:
+          maxLength: 50
+          type: string
+          description: Gets or Sets Severity
+          nullable: true
+        message:
+          maxLength: 255
+          type: string
+          description: Gets or Sets Message
+          nullable: true
+        uuid:
+          type: string
+          description: Gets or Sets Uuid
+          format: uuid
+          nullable: true
+        notification_dt:
+          type: string
+          description: Gets or Sets TimeStamp
+          format: date-time
+          nullable: true
+      additionalProperties: false
+      description: ''
+    CreditRequestResponse:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/ApplicationId'
+        notifications:
+          maxLength: 10
+          type: array
+          items:
+            $ref: '#/components/schemas/ResponseNotification'
+          description: Gets or Sets Notifications
+          nullable: true
+      additionalProperties: false
+      description: ''
+    Notification:
+      type: object
+      properties:
+        category:
+          maxLength: 50
+          type: string
+          description: Category of this notification as a Http status
+          nullable: true
+        code:
+          maxLength: 50
+          type: string
+          description: 'Notification code. First character indicates severity (E,W,I).'
+          nullable: true
+        message:
+          maxLength: 255
+          type: string
+          description: >-
+            Description of the error or information notification. Where the
+            response is 2xx, it's a notification with informational details
+            about this response.
+          nullable: true
+        description:
+          maxLength: 255
+          type: string
+          description: Message which explains the notification.
+          nullable: true
+        action:
+          maxLength: 50
+          type: string
+          description: A suggested action following this notification.
+          nullable: true
+        metadata:
+          type: object
+          additionalProperties:
+            type: object
+            additionalProperties: false
+          description: Context specific to this area. May not be provided.
+          nullable: true
+        uuid:
+          maxLength: 50
+          type: string
+          description: Unique identifier for this notification
+          nullable: true
+        notification_dt:
+          type: string
+          description: Timestamp of the notification.
+          format: date-time
+          nullable: true
+        severity:
+          maxLength: 50
+          type: string
+          description: 'Severity of the notification (ERROR, WARNING, INFO, UNSPECIFIED)'
+          nullable: true
+        field_name:
+          maxLength: 50
+          type: string
+          description: The field name in the request this Notification is related to
+          nullable: true
+      additionalProperties: false
+      description: ''
+    EmptyDataResponse:
+      required:
+        - notifications
+      type: object
+      properties:
+        data:
+          maxLength: 255
+          type: string
+          description: Gets or Sets Data
+          nullable: true
+        notifications:
+          maxLength: 10
+          type: array
+          items:
+            $ref: '#/components/schemas/Notification'
+          description: Gets or Sets Notifications
+          nullable: true
+      additionalProperties: false
+      description: ''
+    CreditRequestStatusHeader:
+      type: object
+      properties:
+        application_request_dt:
+          maxLength: 50
+          type: string
+          description: Gets or Sets TimeStamp
+          format: date-time
+          nullable: true
+        from_date:
+          type: string
+          description: Gets or Sets FromDate
+          format: date
+        to_date:
+          type: string
+          description: Gets or Sets ToDate
+          format: date
+        dealer_number:
+          maxLength: 50
+          type: string
+          description: Gets or Sets DealerNumber
+          nullable: true
+      additionalProperties: false
+      description: Credit request status header
+    ValidationStatus:
+      type: object
+      properties:
+        document_status:
+          maxLength: 50
+          type: string
+          description: Gets or Sets Document Status
+          nullable: true
+        document_sub_status:
+          maxLength: 50
+          type: string
+          description: Gets or Sets Document SubStatus
+          nullable: true
+        comments:
+          maxLength: 255
+          type: string
+          description: Gets or Sets Comments
+          nullable: true
+        validation_officer_email:
+          $ref: '#/components/schemas/Email'
+        validation_officer_telephone:
+          $ref: '#/components/schemas/Telephone'
+        validation_officer_fax:
+          type: string
+          description: Gets or Sets Validation Officer Fax
+          nullable: true
+        document_deficiencies:
+          maxLength: 10
+          type: array
+          items:
+            type: string
+          description: Gets or Sets DocumentDeficiencies
+          nullable: true
+      additionalProperties: false
+      description: ''
+    FundingDetail:
+      type: object
+      properties:
+        description:
+          maxLength: 255
+          type: string
+          description: Gets or Sets Description
+          nullable: true
+        amount:
+          $ref: '#/components/schemas/Money'
+        debit_credit:
+          maxLength: 50
+          type: string
+          description: Gets or Sets DebitCredit
+          nullable: true
+      additionalProperties: false
+      description: ''
+    Funding:
+      type: object
+      properties:
+        total_amount:
+          $ref: '#/components/schemas/Money'
+        net_proceeds:
+          $ref: '#/components/schemas/Money'
+        sub_total:
+          $ref: '#/components/schemas/Money'
+        comments:
+          maxLength: 255
+          type: string
+          description: Gets or Sets Comments
+          nullable: true
+        funding_details:
+          maxLength: 10
+          type: array
+          items:
+            $ref: '#/components/schemas/FundingDetail'
+          description: Gets or Sets FundingDetails
+          nullable: true
+      additionalProperties: false
+      description: ''
+    CreditRequestStatusApplication:
+      type: object
+      properties:
+        trade_name_of_business:
+          maxLength: 100
+          type: string
+          description: Gets or Sets TradeNameOfBusiness
+          nullable: true
+        legal_name_of_business:
+          maxLength: 100
+          type: string
+          description: Gets or Sets LegalNameOfBusiness
+          nullable: true
+        title:
+          maxLength: 50
+          type: string
+          description: Gets or Sets Title
+          nullable: true
+        deal_key:
+          maxLength: 50
+          type: string
+          description: Gets or Sets DealKey
+          nullable: true
+        child_deal_key:
+          maxLength: 50
+          type: string
+          description: Gets or Sets ChildDealKey
+          nullable: true
+        transaction_type:
+          maxLength: 50
+          type: string
+          description: Gets or Sets TransactionType
+          nullable: true
+        app_receive_dt:
+          type: string
+          description: Gets or Sets the application reception date
+          format: date-time
+          nullable: true
+        status:
+          maxLength: 50
+          type: string
+          description: Gets or Sets Status
+          nullable: true
+        status_dt:
+          type: string
+          description: Gets or Sets StatusTimeStamp
+          format: date-time
+          nullable: true
+        vin:
+          maxLength: 17
+          type: string
+          description: Gets or Sets Vin
+          nullable: true
+        year:
+          type: integer
+          description: Gets or Sets Year
+          format: int32
+        make:
+          maxLength: 100
+          type: string
+          description: Gets or Sets Make
+          nullable: true
+        model:
+          maxLength: 100
+          type: string
+          description: Gets or Sets Model
+          nullable: true
+        bank_application_number:
+          maxLength: 50
+          type: string
+          description: Gets or Sets BankApplicationNumber
+          nullable: true
+        analyst_first_name:
+          maxLength: 50
+          type: string
+          description: Gets or Sets AnalystFirstName
+          nullable: true
+        analyst_last_name:
+          maxLength: 50
+          type: string
+          description: Gets or Sets AnalystLastName
+          nullable: true
+        analyst_telephone:
+          $ref: '#/components/schemas/Telephone'
+        loan_type:
+          maxLength: 50
+          type: string
+          description: Gets or Sets LoanType
+          nullable: true
+        loan_amount:
+          $ref: '#/components/schemas/Money'
+        rate_type:
+          maxLength: 50
+          type: string
+          description: Gets or Sets RateType
+          nullable: true
+        rate:
+          type: number
+          description: Gets or Sets Rate
+          format: double
+          nullable: true
+        spread:
+          maxLength: 50
+          type: string
+          description: Gets or Sets Spread
+          nullable: true
+        payment:
+          $ref: '#/components/schemas/Money'
+        term:
+          type: integer
+          description: Gets or Sets Term
+          format: int32
+        number_months_deferred:
+          type: integer
+          description: Gets or Sets NumberMonthsDeferred
+          format: int32
+        decision_expiry_days:
+          type: integer
+          description: Gets or Sets DecisionExpiryDays
+          format: int32
+        validation_status:
+          $ref: '#/components/schemas/ValidationStatus'
+        funding_info:
+          $ref: '#/components/schemas/Funding'
+        conditions:
+          maxLength: 10
+          type: array
+          items:
+            type: string
+          description: Gets or Sets Conditions
+          nullable: true
+        error_descriptions:
+          maxLength: 10
+          type: array
+          items:
+            type: string
+          description: Gets or Sets ErrorDescriptions
+          nullable: true
+      additionalProperties: false
+      description: ''
+    CreditRequestStatus:
+      type: object
+      properties:
+        app_status_tags:
+          $ref: '#/components/schemas/CreditRequestStatusHeader'
+        application:
+          $ref: '#/components/schemas/CreditRequestStatusApplication'
+      additionalProperties: false
+      description: ''
+    CreditRequestStatusResponse:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/CreditRequestStatus'
+        notifications:
+          maxLength: 10
+          type: array
+          items:
+            $ref: '#/components/schemas/ResponseNotification'
+          description: Gets or Sets Notifications
+          nullable: true
+      additionalProperties: false
+      description: ''
+  securitySchemes:
+    oAuth2ClientCredentials:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: 'https://wam-ist.cloud.bns/sso/oauth2/bns/access_token'
+          tokenUrl: 'https://wam-ist.cloud.bns/sso/oauth2/bns/access_token'
+          scopes:
+            application.automotive-credit-requests.bcvc.create-credit-requests.write: Create Credit Request |
+            application.automotive-credit-requests.bcvc.get-credit-requests.read: Retrieve Credit Request |
+            application.automotive-credit-requests.bcvc.update-credit-requests.write: Update Credit Request 
+  parameters:
+    TraceId:
+        name: x-b3-traceid
+        in: header
+        required: true
+        schema:
+            type: string
+        description: |
+            Also known as a Correlation ID, is a unique identifier value that is attached to requests and Notifications that allow reference to a particular business transaction or event chain across multiple integration tiers. 
+            x-b3-traceid header is automatically generated/passed through when Spring Cloud Sleuth is included as a dependency. Sleuth is a transitive dependency of Chassis. 
+            If project team needs to create trace id  their own , it has to be 16 digit hexadecimal number(64 bit, since digit in hexadecimal represents 4 bits) e.g. 71200de3d3f82a83 as supported by Chassis.          
+        example: "41200de3d3e82a81"
+      
+    SpanId:
+        name: x-b3-spanid
+        in: header
+        required: true
+        schema:
+            type: string
+        description: |
+            This header represents root span id. The span represents a basic unit of work.  Span is the primary building block of a distributed trace, representing an individual unit of work done in a distributed system. Spans will contain �References� to other spans, which allows multiple Spans to be assembled into one complete Trace - a visualization of the life of a request as it moves through a distributed system.
+            The trace id (x-b3-traceid) contains a set of span ids, forming a tree-like structure. The trace id will remain the same as one micro service calls the next. Spans have parent-child relationships. This span id creates parent-child relationship with the child spans to generate a trace tree out of all the spans for a request. If project team needs to create span id  their own , it has to be 16 digit hexadecimal number(64 bit, since digit in hexadecimal represents 4 bits) e.g. 71200de3d3f82a83 as supported by Chassis. 
+        example: "41200de3d3e82a81"
+
+    ChannelId:
+        name: x-channel-id
+        in: header
+        required: true
+        schema:
+            type: string
+            enum: 
+             - Branch
+             - CallCentre
+             - ABM
+             - DFC
+             - NCC
+             - BackOffice
+             - Public
+             - Online
+             - Mobile
+             - OtherFI
+             - IVR
+             - POS
+        description: |
+            This is to identify the Channel which is making this request. Originating application is responsible for sending x-channel-id. 
+            For example, if  application 1 makes call to application 2 and then application 2 makes a call to application 3, application 1 will populate and send the x-channel-id to application 2 and application 2 will propagate the same x-channel-id to application 3.       
+        example: "ABM"     
+
+    OriginatingApplicationCode:
+        name: x-originating-appl-code
+        in: header
+        required: true
+        schema:
+            type: string
+        description: |
+            This is to identify the source Application EPM code which is making this request.
+            Originating application is responsible for sending x-originating-appl-code. For example, if  application 1 makes call to application 2 and then application 2 makes a call to application 3, application 1 will populate and send the x-originating-appl-code to application 2 and application 2 will propagate the same x-originating-appl-code to application 3.        
+        example: "BDMS" 
+
+    CountryCode:
+        name: x-country-code
+        in: header
+        required: true
+        schema:
+            type: string
+        description: |
+            This header represents the country code of API client which is making the request. 
+            ISO 3166 Alpha 2 Code (https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) is enforced.        
+        example: "CA"   
+
+    ApiVersion:
+        name: x-api-version
+        in: header
+        required: false
+        schema:
+            type: string
+        description: |
+            This is the run time minor and patch version of the API. 
+            If major version of the API is released then this major version digits need to be reconciled. Example x.1        
+        example: "1.1"
+
+    UserContext:
+        name: x-user-context
+        in: header
+        required: false
+        schema:
+           type: string
+        description: |
+                When there is requirement to pass additional user context attributes as optional headers when a service api is called. x-user-context is needed to be utilized to pass optional header attributes.
+                This header must be a Base64 encoded String for API Spec. The below country specific optional headers is converted to base64 encoded string.
+                Object structure example of  x-user-context -  { "sub-channel" : "Mobile IOS", "officer-id" : "456", "transit-id" : "556", teller-id" : "7464", " originating-ip-address":"122.122.12.11"} . 
+                eyAic3ViLWNoYW5uZWwiIDogIk1vYmlsZSBJT1MiLCAib2ZmaWNlci1pZCIgOiAiNDU2IiwgInRyYW5zaXQtaWQiIDogIjU1NiIsIHRlbGxlci1pZCIgOiAiNzQ2NCIsICIgb3JpZ2luYXRpbmctaXAtYWRkcmVzcyI6IjEyMi4xMjIuMTIuMTEifQ==
+        example: eyAic3ViLWNoYW5uZWwiIDogIk1vYmlsZSBJT1MiLCAib2ZmaWNlci1pZCIgOiAiNDU2IiwgInRyYW5zaXQtaWQiIDogIjU1NiIsIHRlbGxlci1pZCIgOiAiNzQ2NCIsICIgb3JpZ2luYXRpbmctaXAtYWRkcmVzcyI6IjEyMi4xMjIuMTIuMTEifQ==
