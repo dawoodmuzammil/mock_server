@@ -2,14 +2,16 @@ var express = require('express');
 var router = express.Router();
 var underscore = require("underscore");
 
-var { getDereferencedYAML, getInfoFromUrl, getPathData } = require("../public/javascripts/index");
+var { getDereferencedYAML, getInfoFromUrl, getPathData, checkHeaders } = require("../public/javascripts/index");
 
 router.all('/*', async function (req, res) {
 	var url = getInfoFromUrl(req);
 
 	var api = await getDereferencedYAML(`./products/${url.product}/test.yaml`);
 
-	var pathData = getPathData(api, url, res);
+	var pathData = getPathData(res, api, url);
+
+	var areHeadersValid = checkHeaders(res, req.headers, api.components.parameters);
 
 	const [responseCode, responseBody] = Object.entries(pathData)[0];
 	const schema = responseBody.content["application/json"].schema;

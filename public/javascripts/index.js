@@ -1,5 +1,5 @@
 const SwaggerParser = require('swagger-parser');
-const { indexOf } = require('underscore');
+const underscore = require('underscore');
 const parser = new SwaggerParser();
 const YAML = parser.YAML;
 
@@ -28,11 +28,24 @@ module.exports = {
 
 	// gets data related to the path from yaml file
 	// returns 404 Not Found when provided path does not exist in .yaml
-	getPathData(api, url, res) {
+	getPathData(res, api, url) {
 		try {
 			return api['paths'][url.api_path][url.method]; // get all possible responses for that path
 		} catch (error) {
 			res.status(404).send(`The path ${url.api_path} does not exist`);
 		}
+	},
+
+	checkHeaders(res, requestHeaders, targetHeaders) {
+		var requiredHeaders = underscore.where(targetHeaders, { required: true }).map(x => x.name);
+		var x = isAnyHeaderMissing(Object.keys(requestHeaders), requiredHeaders);
+
+		res.send({ request: requestHeaders, target: targetHeaders });
 	}
+
+
+}
+
+function isAnyHeaderMissing(requestHeaders, requiredHeaders) {
+	return requiredHeaders.filter(x => !requestHeaders.includes(x)).length > 0;
 }
