@@ -1,5 +1,4 @@
 const SwaggerParser = require('swagger-parser');
-const underscore = require('underscore');
 const parser = new SwaggerParser();
 const YAML = parser.YAML;
 
@@ -34,18 +33,16 @@ module.exports = {
 		} catch (error) {
 			res.status(404).send(`The path ${url.api_path} does not exist`);
 		}
-	},
-
-	checkHeaders(res, requestHeaders, targetHeaders) {
-		var requiredHeaders = underscore.where(targetHeaders, { required: true }).map(x => x.name);
-		var x = isAnyHeaderMissing(Object.keys(requestHeaders), requiredHeaders);
-
-		res.send({ request: requestHeaders, target: targetHeaders });
 	}
 
+	// checkHeaders(res, requestHeaders, targetHeaders) {
+	// 	var requiredHeaders = underscore.where(targetHeaders, { required: true }).map(x => x.name);
+	// 	var x = isAnyHeaderMissing(Object.keys(requestHeaders), requiredHeaders);
 
+	// 	res.send({ request: requestHeaders, target: targetHeaders });
+	// }
 }
 
-function isAnyHeaderMissing(requestHeaders, requiredHeaders) {
-	return requiredHeaders.filter(x => !requestHeaders.includes(x)).length > 0;
-}
+// function isAnyHeaderMissing(requestHeaders, requiredHeaders) {
+// 	return requiredHeaders.filter(x => !requestHeaders.includes(x)).length > 0;
+// }

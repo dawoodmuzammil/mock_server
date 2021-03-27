@@ -2,7 +2,8 @@ var express = require('express');
 var router = express.Router();
 var underscore = require("underscore");
 
-var { getDereferencedYAML, getInfoFromUrl, getPathData, checkHeaders } = require("../public/javascripts/index");
+var { getDereferencedYAML, getInfoFromUrl, getPathData } = require("../public/javascripts/index");
+var HeaderChecker = require("../public/javascripts/HeaderChecker");
 
 router.all('/*', async function (req, res) {
 	var url = getInfoFromUrl(req);
@@ -11,7 +12,10 @@ router.all('/*', async function (req, res) {
 
 	var pathData = getPathData(res, api, url);
 
-	var areHeadersValid = checkHeaders(res, req.headers, api.components.parameters);
+	// check for missing requried headers
+	HeaderChecker.areAllHeadersValid(res, req.headers, api.components.parameters);
+
+	res.send("sab theek hai");
 
 	const [responseCode, responseBody] = Object.entries(pathData)[0];
 	const schema = responseBody.content["application/json"].schema;
