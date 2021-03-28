@@ -4,6 +4,7 @@ var underscore = require("underscore");
 
 var { getDereferencedYAML, getInfoFromUrl, getPathData } = require("../public/javascripts/index");
 var HeaderChecker = require("../public/javascripts/HeaderChecker");
+var BodyChecker = require("../public/javascripts/BodyChecker");
 
 router.all('/*', async function (req, res) {
 	var url = getInfoFromUrl(req);
@@ -11,11 +12,16 @@ router.all('/*', async function (req, res) {
 	var api = await getDereferencedYAML(`./products/${url.product}/test.yaml`);
 
 	var pathData = getPathData(res, api, url);
+	if (pathData == null) {
+		return;
+	}
 
 	// check for missing requried headers
 	HeaderChecker.areAllHeadersValid(res, req.headers, api.components.parameters);
 
-	res.send("sab theek hai");
+	BodyChecker.isRequestBodyValid(res, pathData.requestBody.content["application/json"].schema);
+
+	//res.send("sab theek hai");
 
 	const [responseCode, responseBody] = Object.entries(pathData)[0];
 	const schema = responseBody.content["application/json"].schema;
