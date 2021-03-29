@@ -5,10 +5,10 @@ A mock server using Swagger-Parser package
 ## Notes
 
 * Folder structrure: 
-	products
-		| - <product_name>
-		|	| - v1.yaml
-		|	| - v2.yaml
+	* `products`
+		- `| - <product_name>`
+		- `|	| - v1.yaml`
+		- `|	| - v2.yaml`
 
 * The YAML files must be renamed to indicate their version e.g. "v1.yaml"
 
