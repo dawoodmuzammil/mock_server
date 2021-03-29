@@ -22,10 +22,11 @@ module.exports = {
 			method: req.method.toLowerCase(),
 
 			// standard api endpoint rules
-			organization: paths[2],
-			product: paths[3],
-			api_path: `/${paths[4]}/${paths[5]}`,
-			path_parameters: paths.slice(6)
+			version: paths[2],
+			organization: paths[3],
+			product: paths[4],
+			api_path: `/${paths[5]}/${paths[6]}`,
+			path_parameters: paths.slice(7)
 		};
 	}
 }

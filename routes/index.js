@@ -9,7 +9,7 @@ var BodyChecker = require("../public/javascripts/BodyChecker");
 
 router.all('/*', async function (req, res) {
 	var url = getInfoFromUrl(req);
-	var api = await getDereferencedYAML(`./products/${url.product}/test.yaml`);
+	var api = await getDereferencedYAML(`./products/${url.product}/${url.version}.yaml`);
 
 	// match route
 	var pathData = PathChecker.getPathData(res, api, url);
