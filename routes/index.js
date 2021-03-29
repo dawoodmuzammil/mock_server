@@ -8,28 +8,36 @@ var BodyChecker = require("../public/javascripts/BodyChecker");
 
 router.all('/*', async function (req, res) {
 	var url = getInfoFromUrl(req);
-
 	var api = await getDereferencedYAML(`./products/${url.product}/test.yaml`);
 
+	// match route
 	var pathData = getPathData(res, api, url);
 	if (pathData == null) {
 		return;
 	}
 
 	// check for missing requried headers
-	HeaderChecker.areAllHeadersValid(res, req.headers, api.components.parameters);
+	var areHeadersValid = HeaderChecker.areAllHeadersValid(res, req.headers, api.components.parameters);
+	if (!areHeadersValid) {
+		return;
+	}
 
-	BodyChecker.isRequestBodyValid(res, pathData.requestBody.content["application/json"].schema);
+	// check request body
+	if (req.method !== 'GET') {
+		var requestBody = req.body;
+		var targetRequestBody = pathData
+			.requestBody
+			.content["application/json"]
+			.schema
+			.properties;
+		//BodyChecker.isRequestBodyValid(res, requestBody, targetRequestBody);
+	}
 
-	//res.send("sab theek hai");
-
-	const [responseCode, responseBody] = Object.entries(pathData)[0];
-	const schema = responseBody.content["application/json"].schema;
-	// res.send(schema);
-	// fakeProperties(schema);
-	// queryParameters(schema, {});
-	// console.log('api===', responses)
-	// faker.jsf.resolve(schema).then(mockData => res.status(200).send({ code: responseCode, body: mockData })).catch(err => res.status(500).send(err));
+	const [responseCode, responseBody] = Object.entries(pathData.responses)[0];
+	res.send({
+		responseCode: responseCode,
+		responseBody: responseBody.description
+	});
 });
 
 module.exports = router;

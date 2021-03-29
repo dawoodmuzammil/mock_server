@@ -9,7 +9,7 @@ module.exports = class HeaderChecker {
 			.where(targetHeaders, { required: true })
 			.map(x => x.name);
 
-		this.#checkForMissingHeaders(res, Object.keys(requestHeaders), requiredHeaders);
+		return this.#checkForMissingHeaders(res, Object.keys(requestHeaders), requiredHeaders);
 	}
 
 	// private method
@@ -21,6 +21,9 @@ module.exports = class HeaderChecker {
 
 		if (missingHeaders.length > 0) {
 			res.status(404).send(`Missing required header(s): [${missingHeaders.join(', ')}]`)
+			return false;
 		}
+
+		return true;
 	}
 }
