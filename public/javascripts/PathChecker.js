@@ -30,6 +30,8 @@ module.exports = class PathChecker {
 		return validPath;
 	}
 
+	// following the generic request mock/<version>/<organization>/<product>/<API_path>/...
+	// we can get the number of path parameters
 	static #getPathParameterCount(path, url) {
 		return path.match(/[/]/g).length
 			-
