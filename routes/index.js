@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var underscore = require("underscore");
+// var axios = require("axios");
 
 var { getDereferencedYAML, getInfoFromUrl } = require("../public/javascripts/index");
 var PathChecker = require("../public/javascripts/PathChecker");
@@ -31,7 +32,7 @@ router.all('/*', async function (req, res) {
 			.content["application/json"]
 			.schema
 			.properties;
-		//BodyChecker.isRequestBodyValid(res, requestBody, targetRequestBody);
+		BodyChecker.isRequestBodyValid(res, requestBody, targetRequestBody);
 	}
 
 	const [responseCode, responseBody] = Object.entries(pathData.responses)[0];
