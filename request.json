@@ -1,0 +1,461 @@
+{
+ "application_request": {
+    "header_info": {
+      "version": "2.8",
+      "application_request_dt": "2020-02-11T09:52:41.0000000",
+      "destination_code": "",
+      "dealer_number": "Q5003",
+      "dealer_sequence_number": 0,
+      "fi_provider": "WebAPI",
+      "message_type": "CR",
+      "print_generation_number": 0
+    },
+    "application": {
+      "application_info": {
+        "deal_key": "IST202002111400",
+        "child_deal_key": "",
+        "request_type": "ADD",
+        "document_language": "E",
+        "loan_type": "LOAN",
+        "app_type": "AUTO",
+        "source_contact": "Nancy Hessey",
+        "transaction_type": "PERSONAL",
+        "pst_exempt_reason": "CertificateOfExemption",
+        "gst_exempt_reason": "ProvincialGovernment",
+        "gst_registrant": false,
+        "subvented_indicator": true,
+        "sale_code": "",
+        "pst_credit_for_liens": "",
+        "immigrant_status": "NotApplicable",
+        "oem_privacy_consent": true,
+        "program_name": "Pratap - Chrysler Sub Fixed",
+        "volume_bonus": "0",
+        "custom_program_ind": false,
+        "type_of_business": "Construction",
+        "annual_sales_of_business": {
+          "amount": 0,
+          "currency": "CAD"
+        },
+        "payment_call": false,
+        "ownership_of_business_info": [
+          {
+            "key": "1001",
+            "first_name": "Charles",
+            "last_name": "Baldwin",
+            "position": "President",
+            "address": {
+              "address_key": "",
+              "address_type": "",
+              "address_active_ind": true,
+              "line_1_addr": "151 RUSSELL JARVIS DR",
+              "line_2_addr": "",
+              "line_3_addr": "",
+              "city": "MARKHAM",
+              "state": "ON",
+              "postal_cd": "L3S4L2",
+              "country_cd": {
+                "code": "CA",
+                "description": "Canada"
+              },
+              "effective_date": "2020-03-01",
+              "end_date": "2024-03-01",
+              "verify_method": "",
+              "apt_unit_floor": "60",
+              "additional_address_info": ""
+            },
+            "home_phone": {
+              "contact_type_cd": "",
+              "phone_area_cd": "905",
+              "phone_country_cd": {
+                "code": "CA",
+                "description": "Canada"
+              },
+              "phone_no": "9569853",
+              "phone_extension_no": "",
+              "full_telephone_no": "19059569853",
+              "phone_method_type_cd": ""
+            },
+            "mobile_phone": {
+              "contact_type_cd": "",
+              "phone_area_cd": "416",
+              "phone_country_cd": {
+                "code": "CA",
+                "description": "Canada"
+              },
+              "phone_no": "9569850",
+              "phone_extension_no": "",
+              "full_telephone_no": "14169569850",
+              "phone_method_type_cd": ""
+            },
+            "percent_owned": 100
+          }
+        ]
+      },
+      "garaging_address": {},
+      "applicants": [
+        {
+          "personal": {
+            "applicant_type": "Primary",
+            "trade_name_of_business": "AD Direct Constructions",
+            "legal_name_of_business": "AD Direct Constructions",
+            "co_applicant_relationship": "Spouse",
+            "marital_status": "Married",
+            "language": "E",
+            "title": "Mr.",
+            "first_name": "Tom",
+            "middle_name": "",
+            "last_name": "Armstrong",
+            "suffix": "Jr.",
+            "email_address": {
+              "email_address_text": "tarmstrong@gmail.com",
+              "email_method_type": "Email",
+              "email_type": "personal"
+            },
+            "tax_id": "315621959",
+            "drivers_license": "M184193839498",
+            "maiden_name": "",
+            "birth_date": "1989-12-06T00:00:00",
+            "number_of_dependants": 0,
+            "identifications": [
+              {
+                "identification_type": "driversLicense",
+                "identification_no": "C94545790891206",
+                "place_of_issue": "ON",
+                "description": "Ontario drivers license",
+                "expiry_date": "2025-11-01"
+              }
+            ],
+            "bns_privacy_consent": true
+          },
+          "residence_info": {
+            "address": {
+              "address_active_ind": true,
+              "line_1_addr": "151 RUSSELL JARVIS DR",
+              "line_2_addr": "",
+              "line_3_addr": "",
+              "city": "MARKHAM",
+              "state": "ON",
+              "postal_cd": "L3S4L2",
+              "country_cd": {
+                "code": "CA",
+                "description": "Canada"
+              },
+              "effective_date": "2020-03-01",
+              "end_date": "2024-03-01",
+              "apt_unit_floor": "60",
+              "additional_address_info": ""
+            },
+            "home_phone": {
+              "phone_area_cd": "905",
+              "phone_country_cd": {
+                "code": "CA",
+                "description": "Canada"
+              },
+              "phone_no": "9569853",
+              "full_telephone_no": "19059569853"
+            },
+            "mobile_phone": {},
+            "residence_status": "OwnerBuying",
+            "rent_mortgage_amount": {
+                "amount":569,
+                "currency":"CAD"
+            },
+            "landlord_mortgagor": "TD Bank",
+            "address_telephone": {
+              "phone_area_cd": "905",
+              "phone_country_cd": {
+                "code": "CA",
+                "description": "Canada"
+              },
+              "phone_no": "9569800",
+              "full_telephone_no": "19059569800"
+            },
+            "previous_address": {},
+            "previous_duration_months": 0
+          },
+          "employment_info": {
+            "current_employments": [
+              {
+                "employer_name": "Acme ABC Limited",
+                "address": {
+                  "address_key": "",
+                  "address_type": "",
+                  "address_active_ind": true,
+                  "line_1_addr": "200 Robert Speck Pky",
+                  "line_2_addr": "",
+                  "line_3_addr": "",
+                  "city": "Mississauga",
+                  "state": "ON",
+                  "postal_cd": "L4Z1S3",
+                  "country_cd": {
+                    "code": "CA",
+                    "description": "Canada"
+                  },
+                  "effective_date": "2020-03-01",
+                  "end_date": "2024-03-01",
+                  "verify_method": "",
+                  "apt_unit_floor": "60",
+                  "additional_address_info": ""
+                },
+                "phone": {
+                  "contact_type_cd": "",
+                  "phone_area_cd": "905",
+                  "phone_country_cd": {
+                    "code": "CA",
+                    "description": "Canada"
+                  },
+                  "phone_no": "9019853",
+                  "phone_extension_no": "",
+                  "full_telephone_no": "19059019853",
+                  "phone_method_type_cd": ""
+                },
+                "duration_months": 102,
+                "employer_contact": "James Smith",
+                "employer_fax": "",
+                "employer_phone": {},
+                "self_employed": false,
+                "accountant_name": "",
+                "accountant_phone": {},
+                "income": {
+                  "amount": 4410,
+                  "currency": "CAD"
+                },
+                "income_frequency": "Monthly",
+                "position": "MANAGER",
+                "occupation": "FullTime",
+                "occupation_type": "ExecutiveManagerial",
+                "military": true,
+                "paygrade": "",
+                "supervisor": ""
+              }
+            ],
+            "previous_employment": {}
+          },
+          "other_income": [
+            {
+              "description": "Part-time job",
+              "frequency": "Weekly",
+              "amount": {
+                "amount": 200.0,
+                "currency": "CAD"
+              }
+            }
+          ],
+          "relative_info": {},
+          "liabilities": {
+            "mortgage": {
+              "financed_by": "Home Capital Inc",
+              "purchase_price": {
+                "amount": 0,
+                "currency": "CAD"
+              },
+              "balance_owed": {
+                "amount": 274538.0,
+                "currency": "CAD"
+              },
+              "monthly_payment": {
+                "amount": 734.0,
+                "currency": "CAD"
+              }
+            },
+            "car": [],
+            "bank_card": [],
+            "store_card": [],
+            "other_creditors": [],
+            "bankruptcy_in_last7_years": false,
+            "guarantor": false,
+            "cars_repossessed": false,
+            "defendant_in_legal_action": false,
+            "alimony_child_support": true,
+            "alimony_child_support_amount": 0
+          },
+          "assets": {
+            "chequing_account": [],
+            "saving_account": [],
+            "cash_value_life_insurance": 0,
+            "certificates_of_deposit": 0,
+            "last_car_financed": {}
+          }
+        }
+      ],
+      "loan": {
+        "cash_price": {
+          "amount": 16016,
+          "currency": "CAD"
+        },
+        "cash_down": {
+          "amount": 0,
+          "currency": "CAD"
+        },
+        "manufacture_rebate": 0,
+        "trade_in_allowance": {
+          "amount": 0,
+          "currency": "CAD"
+        },
+        "less_payoff": {
+          "amount": 0,
+          "currency": "CAD"
+        },
+        "life_disability_premium": {
+          "amount": 0,
+          "currency": "CAD"
+        },
+        "agreement_registration_fee": {
+          "amount": 50.58,
+          "currency": "CAD"
+        },
+        "extended_warranty": "",
+        "is_manufacture_extended_warranty": false,
+        "rust_proofing": "",
+        "scotch_guard_other": "",
+        "rate": 1,
+        "rate_type": "Fixed",
+        "spread": 0,
+        "term": 24,
+        "early_maturity_term": 24,
+        "number_months_deferred": 0,
+        "payment": {
+          "amount": 771.97,
+          "currency": "CAD"
+        },
+        "finance_amount": {
+          "amount": 18148.66,
+          "currency": "CAD"
+        },
+        "invoice": {
+          "amount": 0,
+          "currency": "CAD"
+        },
+        "msrp": {
+          "amount": 16016,
+          "currency": "CAD"
+        }
+      },
+      "lease": {
+        "single_payment_lease": "",
+        "selling_price": {},
+        "dealer_installed_options": [],
+        "life_disability_insurance": {},
+        "lease_registration_fee": {},
+        "vehicle_registration_fee": {},
+        "manufacturer_warranty": "",
+        "lease_service_fee": {},
+        "other": "",
+        "lien": "",
+        "cash_down": {},
+        "trade_in_amount": {},
+        "capitalized_cost": {},
+        "non_taxable_amount": {},
+        "adjusted_msrp": {},
+        "residual_value_guide_date": "2020-02-11T09:52:41",
+        "residual_value_guide": "BL",
+        "equipment_adds": "",
+        "equipment_deducts": "",
+        "excess_km_on_delivery": 0,
+        "excess_km_on_delivery_rate": "0",
+        "excess_km_on_delivery_amount": {},
+        "excess_contracted_km_on_delivery": 0,
+        "excess_contracted_km_on_delivery_rate": 0,
+        "excess_contracted_km_on_delivery_amount": {},
+        "low_contracted_km_on_delivery": 0,
+        "low_contracted_km_on_delivery_rate": 0,
+        "low_contracted_km_on_delivery_amount": {},
+        "residual_value": {},
+        "total_depreciation": {},
+        "term": 24,
+        "monthly_depreciation": {},
+        "total_interest_cost": {},
+        "interest_factor": 0,
+        "monthly_interest_cost": {},
+        "fixed_monthly_rental": {},
+        "gsthst_rate": 0,
+        "gsthst_amount_on_rental": {},
+        "pst_rate": 0,
+        "pst_amount_on_rental": {},
+        "total_monthly_payment": {},
+        "total_down_payment": {},
+        "gsthst_amount_on_down_payment": {},
+        "pst_amount_on_down_payment": {},
+        "security_deposit": {},
+        "vehicle_registration_fee_paid": {},
+        "excess_contracted_km_deposit": {},
+        "excess_contracted_km_deposit_rate": 0,
+        "excess_contracted_km_deposit_amount": {},
+        "lease_registration_fee_paid": {},
+        "lease_service_fee_paid": {},
+        "other_payment_due_at_signing": {},
+        "total_cash_due_at_signing": {},
+        "adjusted_capitalized_cost": {},
+        "dealer_advance": {}
+      },
+      "collateral": {
+        "intended_use": "Personal",
+        "year": 2017,
+        "make": "Chrysler",
+        "model": "300",
+        "vehicle_status": "None",
+        "vehicle_type": "Auto",
+        "mileage": "652",
+        "body_style": "4D Sedan V8",
+        "series": "C",
+        "model_number": "",
+        "uvc": "",
+        "vin": "JH4KA3270LC001300",
+        "ac": true,
+        "tape_cd": true,
+        "cruise": true,
+        "power_windows": true,
+        "alum_wheels": false,
+        "sun_roof": false,
+        "four_wd": false,
+        "manual_trans": false,
+        "power_seats": false,
+        "t_roof": false,
+        "automatic_trans": true,
+        "rear_ac": false,
+        "power_moon_roof": false,
+        "panorama_roof": false,
+        "leather_seats": true,
+        "power_steering": true,
+        "engine_upgrade": false,
+        "diesel": false,
+        "turbo_diesel": false,
+        "sport_wheels": true,
+        "chrome_wheels": false,
+        "alloy_wheels": false,
+        "hatch_roof": false,
+        "hard_top": false,
+        "radio_upgrade": false,
+        "stereo": true,
+        "extra_door": false,
+        "mftr_package1": false,
+        "mftr_package2": false,
+        "mftr_package3": false,
+        "mftr_package4": false,
+        "additional_options": [],
+        "option_description": [],
+        "stock_number": "",
+        "license_plate_number": "BHEC0145",
+        "number_of_doors": 4,
+        "number_of_cylinders": 4,
+        "colour": "Blue"
+      },
+      "additional_collateral": [],
+      "trade_in": [
+        {
+          "year": 2016,
+          "make": "Chrysler",
+          "model": "300",
+          "body_style": "4D Sedan V8",
+          "vin": "1G1ZC5E04CF178010",
+          "monthly_payment_amount": {
+            "amount": 12000,
+            "currency": "CAD"
+          }
+        }
+      ],
+      "pre_authorized_debit": {},
+      "notes": []
+    }
+  }
+}

@@ -10,9 +10,7 @@ module.exports = class BodyChecker {
 		var targetArr = this.#flattenTargetJson(targetBody[Object.keys(targetBody)[0]], null, Array());
 		// console.log(`Number of properties in target: ${targetArr.length}`);
 
-		this.#compare(requestArr, targetArr);
-
-		return;
+		return this.#isValid(requestArr, targetArr);
 	}
 
 	static #flattenRequestJson(request, parent, arr) {
@@ -83,7 +81,7 @@ module.exports = class BodyChecker {
 		}
 	}
 
-	static #compare(requestArr, targetArr) {
+	static #isValid(requestArr, targetArr) {
 		if (requestArr.length > targetArr.length) {
 			return false;
 		}
