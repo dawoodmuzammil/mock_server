@@ -20,7 +20,7 @@ module.exports = class BodyChecker {
 
 		children.forEach(current => {
 			// bug: don't know why '0' comes back!
-			if (parent === '0') {
+			if (parent === '0' || current === '0') {
 				return;
 			}
 
@@ -52,7 +52,8 @@ module.exports = class BodyChecker {
 	static #flattenTargetJson(target, parent, arr) {
 		// get properties at that level
 		// these properties will be the parents of their children (of course!)
-		var children = Object.keys(target.properties);
+		// if mno properties found, initialize empty array
+		var children = Object.keys(target.properties ?? []);
 
 		children.forEach(current => {
 			// add to array
@@ -64,11 +65,17 @@ module.exports = class BodyChecker {
 			// get children properties 
 			var child = target.properties[current];
 
-			if (child.type !== 'object') {
+			if (child.type !== 'object' && child.type !== 'array') {
 				return;
 			}
 
-			this.#flattenTargetJson(child, current, arr);
+			// in case child is of type array
+			if (child.type === 'array') {
+				this.#flattenTargetJson(child.items, current, arr);
+			}
+			else {
+				this.#flattenTargetJson(child, current, arr);
+			}
 		});
 
 		if (parent == null) {
@@ -100,15 +107,17 @@ module.exports = class BodyChecker {
 			}
 
 			if (!matchFound) {
-				// invalidRequestFields.push(rChild);
-				// return false;
-				console.log(rChild);
+				invalidRequestFields.push(requestArr[i]);
+				// // return false;
+				// console.log(`Parent: ${rParent}\nChild: ${rChild}\n`);
 			}
 		}
 
-		// if (underscore.any(invalidRequestFields)) {
-		// 	console.log(invalidRequestFields.toString());
-		// }
+		if (underscore.any(invalidRequestFields)) {
+			console.log(JSON.stringify(invalidRequestFields, null, 4));
+			return false;
+		}
+
 		return true;
 	}
 }
