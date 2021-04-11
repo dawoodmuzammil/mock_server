@@ -7,6 +7,7 @@ var { getDereferencedYAML, getInfoFromUrl } = require("../public/javascripts/ind
 var PathChecker = require("../public/javascripts/PathChecker");
 var HeaderChecker = require("../public/javascripts/HeaderChecker");
 var BodyChecker = require("../public/javascripts/BodyChecker");
+var MockResponseGenerator = require("../public/javascripts/MockResponseGenerator");
 
 router.all('/*', async function (req, res) {
 	var url = getInfoFromUrl(req);
@@ -25,6 +26,7 @@ router.all('/*', async function (req, res) {
 	}
 
 	// check request body
+	var isBodyValid = true;
 	if (req.method !== 'GET') {
 		var requestBody = req.body;
 		var targetRequestBody = pathData
@@ -33,17 +35,25 @@ router.all('/*', async function (req, res) {
 			.schema
 			.properties;
 
-		var isBodyValid = BodyChecker.isRequestBodyValid(res, requestBody, targetRequestBody);
-		if (!isBodyValid) {
-			// var response = 
-		}
+		isBodyValid = BodyChecker.isRequestBodyValid(res, requestBody, targetRequestBody);
 	}
 
-	const [responseCode, responseBody] = Object.entries(pathData.responses)[0];
-	res.send({
-		responseCode: responseCode,
-		responseBody: responseBody.description
-	});
+	// generate mock response
+	var statusCode;
+	if (isBodyValid) {
+		statusCode = '200';
+	} else {
+		statusCode = '400'
+	}
+
+	var response = MockResponseGenerator.generateResponse(pathData, statusCode);
+
+	res.status(parseInt(statusCode)).send(response);
+	// const [responseCode, responseBody] = Object.entries(pathData.responses)[0];
+	// res.send({
+	// 	responseCode: responseCode,
+	// 	responseBody: responseBody.description
+	// });
 });
 
 module.exports = router;
