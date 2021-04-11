@@ -104,13 +104,13 @@ module.exports = class BodyChecker {
 				}
 			}
 
+			// no match found for request property in targetBody
 			if (!matchFound) {
 				invalidRequestFields.push(requestArr[i]);
-				// // return false;
-				// console.log(`Parent: ${rParent}\nChild: ${rChild}\n`);
 			}
 		}
 
+		// if at least one invalid property exists in request
 		if (underscore.any(invalidRequestFields)) {
 			console.log(JSON.stringify(invalidRequestFields, null, 4));
 			return false;
@@ -119,6 +119,3 @@ module.exports = class BodyChecker {
 		return true;
 	}
 }
-
-// 1. target - request == 0 (missing in request are fine)
-// 2. exact match

@@ -32,7 +32,11 @@ router.all('/*', async function (req, res) {
 			.content["application/json"]
 			.schema
 			.properties;
-		BodyChecker.isRequestBodyValid(res, requestBody, targetRequestBody);
+
+		var isBodyValid = BodyChecker.isRequestBodyValid(res, requestBody, targetRequestBody);
+		if (!isBodyValid) {
+			// var response = 
+		}
 	}
 
 	const [responseCode, responseBody] = Object.entries(pathData.responses)[0];
