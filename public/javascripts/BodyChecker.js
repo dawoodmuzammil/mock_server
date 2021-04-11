@@ -1,25 +1,34 @@
 const res = require('express/lib/response');
 const underscore = require('underscore');
+const diff = require('diff-arrays-of-objects');
 
 module.exports = class BodyChecker {
 	static isRequestBodyValid(res, requestBody, targetBody) {
-		var requestMap = this.#flattenRequestJson(requestBody[Object.keys(requestBody)[0]], null, new Map());
-		console.log(`Number of properties in request: ${requestMap.size}`);
+		var requestArr = this.#flattenRequestJson(requestBody[Object.keys(requestBody)[0]], null, new Array());
+		// console.log(`Number of properties in request: ${requestArr.length}`);
 
-		var targetMap = this.#flattenTargetJson(targetBody[Object.keys(targetBody)[0]], null, new Map());
-		console.log(`Number of properties in target: ${targetMap.size}`);
+		var targetArr = this.#flattenTargetJson(targetBody[Object.keys(targetBody)[0]], null, Array());
+		// console.log(`Number of properties in target: ${targetArr.length}`);
 
-		this.#compare(requestMap, targetMap);
+		this.#compare(requestArr, targetArr);
 
 		return;
 	}
 
-	static #flattenRequestJson(request, parent, map) {
+	static #flattenRequestJson(request, parent, arr) {
 		var children = Object.keys(request);
 
 		children.forEach(current => {
-			// current property to the map, along with its parent property
-			map.set(current, parent); // child, parent
+			// bug: don't know why '0' comes back!
+			if (parent === '0') {
+				return;
+			}
+
+			// current property to the array, along with its parent property			
+			arr.push({
+				parent: parent,
+				child: current
+			});
 
 			// get children properties 
 			var child = request[current];
@@ -27,48 +36,80 @@ module.exports = class BodyChecker {
 				return;
 			}
 
-			this.#flattenRequestJson(child, current, map);
+			// if an array, pass the first element to fetch properties
+			if (Array.isArray(child) && child.length > 0) {
+				this.#flattenRequestJson(child[0], current, arr);
+			}
+
+			this.#flattenRequestJson(child, current, arr);
 		});
 
 		if (parent == null) {
-			return map;
+			return arr;
 		}
 	}
 
-	static #flattenTargetJson(target, parent, map) {
+	static #flattenTargetJson(target, parent, arr) {
 		// get properties at that level
 		// these properties will be the parents of their children (of course!)
 		var children = Object.keys(target.properties);
-		// var children = Object.keys(target);
 
 		children.forEach(current => {
-			// add to map
-			map.set(current, parent); // child, parent
+			// add to array
+			arr.push({
+				parent: parent,
+				child: current
+			});
 
 			// get children properties 
 			var child = target.properties[current];
-			//var child = target[current];
 
 			if (child.type !== 'object') {
 				return;
 			}
 
-			this.#flattenTargetJson(child, current, map);
+			this.#flattenTargetJson(child, current, arr);
 		});
 
 		if (parent == null) {
-			return map;
+			return arr;
 		}
 	}
 
-	static #compare(requestMap, targetMap) {
-		if (requestMap.size > targetMap.size) {
+	static #compare(requestArr, targetArr) {
+		if (requestArr.length > targetArr.length) {
 			return false;
 		}
 
-		for (var [child, parent] of requestMap) {
-			console.log(`Child: ${child}, Parent: ${parent}`);
+		var invalidRequestFields = [];
+
+		for (var i = 0; i < requestArr.length; i++) {
+			var rParent = requestArr[i].parent;
+			var rChild = requestArr[i].child;
+			var matchFound = false;
+
+			for (var j = 0; j < targetArr.length; j++) {
+				var tParent = targetArr[j].parent;
+				var tChild = targetArr[j].child;
+
+				// check if matching
+				if (tParent === rParent && tChild === rChild) {
+					matchFound = true;
+					break;
+				}
+			}
+
+			if (!matchFound) {
+				// invalidRequestFields.push(rChild);
+				// return false;
+				console.log(rChild);
+			}
 		}
+
+		// if (underscore.any(invalidRequestFields)) {
+		// 	console.log(invalidRequestFields.toString());
+		// }
+		return true;
 	}
 }
 
