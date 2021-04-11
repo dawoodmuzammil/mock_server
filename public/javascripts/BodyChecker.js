@@ -1,14 +1,9 @@
-const res = require('express/lib/response');
 const underscore = require('underscore');
-const diff = require('diff-arrays-of-objects');
 
 module.exports = class BodyChecker {
 	static isRequestBodyValid(res, requestBody, targetBody) {
 		var requestArr = this.#flattenRequestJson(requestBody[Object.keys(requestBody)[0]], null, new Array());
-		// console.log(`Number of properties in request: ${requestArr.length}`);
-
 		var targetArr = this.#flattenTargetJson(targetBody[Object.keys(targetBody)[0]], null, Array());
-		// console.log(`Number of properties in target: ${targetArr.length}`);
 
 		return this.#isValid(requestArr, targetArr);
 	}
@@ -76,18 +71,21 @@ module.exports = class BodyChecker {
 			}
 		});
 
+		// exit condition
 		if (parent == null) {
 			return arr;
 		}
 	}
 
 	static #isValid(requestArr, targetArr) {
+		// if request contains more properties than target, request is not valid
 		if (requestArr.length > targetArr.length) {
 			return false;
 		}
 
 		var invalidRequestFields = [];
 
+		// for each property in request, check if it exists in target
 		for (var i = 0; i < requestArr.length; i++) {
 			var rParent = requestArr[i].parent;
 			var rChild = requestArr[i].child;

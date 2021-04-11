@@ -39,21 +39,12 @@ router.all('/*', async function (req, res) {
 	}
 
 	// generate mock response
-	var statusCode;
-	if (isBodyValid) {
-		statusCode = '200';
-	} else {
-		statusCode = '400'
-	}
-
+	var statusCode = isBodyValid ? '200' : '400';
 	var response = MockResponseGenerator.generateResponse(pathData, statusCode);
 
-	res.status(parseInt(statusCode)).send(response);
-	// const [responseCode, responseBody] = Object.entries(pathData.responses)[0];
-	// res.send({
-	// 	responseCode: responseCode,
-	// 	responseBody: responseBody.description
-	// });
+	// return response
+	res.status(parseInt(statusCode))
+		.send(response);
 });
 
 module.exports = router;
