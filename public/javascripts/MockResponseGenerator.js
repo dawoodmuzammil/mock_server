@@ -3,6 +3,7 @@ module.exports = class MockResponseGenerator {
 		return pathData
 			.responses[statusCode]
 			.content["application/json"]
-			.schema;
+			.schema
+			.example;
 	}
 }

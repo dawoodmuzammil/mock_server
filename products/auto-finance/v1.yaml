@@ -48,16 +48,7 @@ paths:
           content:
             application/json:
               schema:
-                # $ref: '#/components/schemas/CreditRequestResponse'
-                data:
-                  application_id: 5a4e03a5-0c8c-42c7-87e8-d29a00926f68
-                notifications:
-                - code: EX821
-                  source: src_hist
-                  severity: high
-                  message: message
-                  uuid: 5a4e03a5-0c8c-42c7-87e8-d29a00926f68
-                  notification_dt: '2012-04-23T18:25:43.511Z'
+                $ref: '#/components/schemas/CreditRequestResponse'                
         '400':
           description: >-
             Indicates that the server could not understand the request. This is
@@ -65,19 +56,7 @@ paths:
           content:
             application/json:
               schema:
-                # $ref: '#/components/schemas/EmptyDataResponse'
-                data: ''
-                notifications:
-                - category: ''
-                  code: ''
-                  message: ''
-                  description: ''
-                  action: ''
-                  metadata: ''
-                  uuid: ''
-                  notification_dt: ''
-                  severity: ''
-                  field_name: ''
+                $ref: '#/components/schemas/EmptyDataResponse'                
         '401':
           description: >-
             Unauthorized.  This will be returned when no authentication
@@ -147,16 +126,7 @@ paths:
           content:
             application/json:
               schema:
-                # $ref: '#/components/schemas/CreditRequestStatusResponse'
-                message: This is a mock response
-                notifications:
-                - code: EX821
-                  source: src_hist
-                  severity: high
-                  message: message
-                  uuid: 5a4e03a5-0c8c-42c7-87e8-d29a00926f68
-                  notification_dt: '2012-04-23T18:25:43.511Z'
-              
+                $ref: '#/components/schemas/CreditRequestStatusResponse'                          
         '400':
           description: >-
             Indicates that the server could not understand the request. This is
@@ -164,19 +134,7 @@ paths:
           content:
             application/json:
               schema:
-                # $ref: '#/components/schemas/EmptyDataResponse'
-                data: ''
-                notifications:
-                - category: ''
-                  code: ''
-                  message: ''
-                  description: ''
-                  action: ''
-                  metadata: ''
-                  uuid: ''
-                  notification_dt: ''
-                  severity: ''
-                  field_name: ''
+                $ref: '#/components/schemas/EmptyDataResponse'                
         '401':
           description: >-
             Unauthorized.  This will be returned when no authentication
@@ -250,16 +208,7 @@ paths:
           content:
             application/json:
               schema:
-                # $ref: '#/components/schemas/CreditRequestResponse'
-                data:
-                  application_id: 5a4e03a5-0c8c-42c7-87e8-d29a00926f68
-                notifications:
-                - code: EX821
-                  source: src_hist
-                  severity: high
-                  message: message
-                  uuid: 5a4e03a5-0c8c-42c7-87e8-d29a00926f68
-                  notification_dt: '2012-04-23T18:25:43.511Z'
+                $ref: '#/components/schemas/CreditRequestResponse'
         '400':
           description: >-
             Indicates that the server could not understand the request. This is
@@ -267,20 +216,7 @@ paths:
           content:
             application/json:
               schema:
-                # $ref: '#/components/schemas/EmptyDataResponse'
-                data: ''
-                notifications:
-                - category: ''
-                  code: ''
-                  message: ''
-                  description: ''
-                  action: ''
-                  metadata: ''
-                  uuid: ''
-                  notification_dt: ''
-                  severity: ''
-                  field_name: ''
-
+                $ref: '#/components/schemas/EmptyDataResponse'                
         '401':
           description: >-
             Unauthorized.  This will be returned when no authentication
@@ -2575,6 +2511,16 @@ components:
           nullable: true
       additionalProperties: false
       description: ''
+      example:
+        data:
+          application_id: 5a4e03a5-0c8c-42c7-87e8-d29a00926f68
+        notifications:
+        - code: EX821
+          source: src_hist
+          severity: high
+          message: message
+          uuid: 5a4e03a5-0c8c-42c7-87e8-d29a00926f68
+          notification_dt: '2012-04-23T18:25:43.511Z'
     Notification:
       type: object
       properties:
@@ -2655,6 +2601,19 @@ components:
           nullable: true
       additionalProperties: false
       description: ''
+      example:
+        data: ''
+        notifications:
+        - category: ''
+          code: ''
+          message: ''
+          description: ''
+          action: ''
+          metadata: ''
+          uuid: ''
+          notification_dt: ''
+          severity: ''
+          field_name: ''
     CreditRequestStatusHeader:
       type: object
       properties:
@@ -2904,6 +2863,15 @@ components:
       additionalProperties: false
       description: ''
     CreditRequestStatusResponse:
+      example:
+        message: This is a mock response
+        notifications:
+        - code: EX821
+          source: src_hist
+          severity: high
+          message: message
+          uuid: 5a4e03a5-0c8c-42c7-87e8-d29a00926f68
+          notification_dt: '2012-04-23T18:25:43.511Z'
       type: object
       properties:
         data:
